@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>System Identification &mdash; Nimble Physics 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+
+  
+  
+
+  
+    <link rel="canonical" href="https://nimblephysics.org/system-identification.html" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Accessing Jacobians of Dynamics" href="accessing-raw-jacobians.html" />
+    <link rel="prev" title="Inverse Dynamics (with Contact)" href="inverse-dynamics.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-worlds.html">Understand Worlds and Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backprop-through-physics.html">Backprop through Physics Timesteps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-in-world-space.html">Specify Loss in World Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="human-body.html">Differentiable Human Body Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Inverse Dynamics (with Contact)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">System Identification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tuning-mass">Tuning mass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatically-initializing-inertia">Automatically Initializing Inertia</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nimble Physics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>System Identification</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/system-identification.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="system-identification">
+<h1>System Identification<a class="headerlink" href="#system-identification" title="Permalink to this headline">¶</a></h1>
+<p>It’s possible to use Nimble to fit the parameters of your simulation to observed real-world data.
+We’re actively working on adding more features to Nimble, but so far we support backprop into mass and inertia properties.</p>
+<p>This document will walk you through constructing a super simple example to illustrate using backprop to learn inertia properties.
+We’ll again use a simple box, just like in <a class="reference internal" href="backprop-through-physics.html#backprop"><span class="std std-ref">Backprop through Physics Timesteps</span></a>.
+We’ll try to recover what the mass of our box should’ve been in order to reach a target position after 100 timesteps of a [10, 10] force in the x and y directions.</p>
+<p>Note: Much like in <a class="reference internal" href="backprop-through-physics.html#backprop"><span class="std std-ref">Backprop through Physics Timesteps</span></a>, solving for mass like this is trivial and could be solved with simble analytical models. You <cite>can</cite> do much more complex optimization in Nimble, but this is a tutorial, so we’re keeping it simple to start out.</p>
+<p>If you’re the type of person who prefers to just look at complete Python code, here’s <a class="reference download internal" download="" href="_downloads/b66363d64422de48e722154bd402147a/tune_mass.py"><code class="xref download docutils literal notranslate"><span class="pre">what</span> <span class="pre">we'll</span> <span class="pre">be</span> <span class="pre">building</span></code></a>.</p>
+<div class="section" id="tuning-mass">
+<h2>Tuning mass<a class="headerlink" href="#tuning-mass" title="Permalink to this headline">¶</a></h2>
+<p>Now that we’ve learned how to tune the initial velocity in <a class="reference internal" href="backprop-through-physics.html#backprop"><span class="std std-ref">Backprop through Physics Timesteps</span></a>, let’s take a look at
+how to do the same for mass. The code is largely the same, except for a few
+changes. First, we need to register with Nimble that we’re going to be learning the mass of our box body:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>  <span class="c1"># This is not used in the PyTorch API</span>
+<span class="n">world</span><span class="o">.</span><span class="n">getWrtMass</span><span class="p">()</span><span class="o">.</span><span class="n">registerNode</span><span class="p">(</span>
+    <span class="n">boxBody</span><span class="p">,</span>
+    <span class="n">nimble</span><span class="o">.</span><span class="n">neural</span><span class="o">.</span><span class="n">WrtMassBodyNodeEntryType</span><span class="o">.</span><span class="n">MASS</span><span class="p">,</span>
+    <span class="n">bound</span><span class="p">,</span>
+    <span class="n">bound</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We also need to create a learnable <cite>torch.Tensor</cite> for mass:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mass</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># True mass is 2.0</span>
+</pre></div>
+</div>
+<p>Finally, pass the learnable mass tensor into the timestep function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">state</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">timestep</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">mass</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since mass is an optional argument, we only need to pass it in when we want to
+optimize the mass value.</p>
+<p>Here’s the complete code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+
+<span class="c1"># Set up the world</span>
+<span class="n">world</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">World</span><span class="p">()</span>
+<span class="n">world</span><span class="o">.</span><span class="n">setGravity</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">world</span><span class="o">.</span><span class="n">setTimeStep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Set up initial conditions for optimization</span>
+<span class="n">initial_position</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">initial_velocity</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="o">-</span><span class="mf">3.0011</span><span class="p">,</span> <span class="mf">4.8577</span><span class="p">])</span>
+<span class="n">mass</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># True mass is 2.0</span>
+<span class="n">goal</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([[</span><span class="mf">2.4739</span><span class="p">,</span> <span class="mf">2.4768</span><span class="p">]])</span>
+<span class="c1"># We apply nonzero force so that mass can be determined from the trajectory.</span>
+<span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">])</span>
+
+<span class="c1"># Set up the box</span>
+<span class="n">box</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span><span class="p">()</span>
+<span class="n">boxJoint</span><span class="p">,</span> <span class="n">boxBody</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">createTranslationalJoint2DAndBodyNodePair</span><span class="p">()</span>
+<span class="n">world</span><span class="o">.</span><span class="n">addSkeleton</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+<span class="n">bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>  <span class="c1"># This is not used, so we just pass in zeros</span>
+<span class="n">world</span><span class="o">.</span><span class="n">getWrtMass</span><span class="p">()</span><span class="o">.</span><span class="n">registerNode</span><span class="p">(</span>
+    <span class="n">boxBody</span><span class="p">,</span>
+    <span class="n">nimble</span><span class="o">.</span><span class="n">neural</span><span class="o">.</span><span class="n">WrtMassBodyNodeEntryType</span><span class="o">.</span><span class="n">MASS</span><span class="p">,</span>
+    <span class="n">bound</span><span class="p">,</span>
+    <span class="n">bound</span><span class="p">)</span>
+
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">initial_position</span><span class="p">,</span> <span class="n">initial_velocity</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="p">]</span>
+
+    <span class="n">num_timesteps</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_timesteps</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">timestep</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">mass</span><span class="p">)</span>
+        <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="c1"># Our loss is just the distance to the origin at the final step</span>
+    <span class="n">final_position</span> <span class="o">=</span> <span class="n">state</span><span class="p">[:</span><span class="n">world</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">()]</span>  <span class="c1"># Position is the first half of the state vector</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">goal</span> <span class="o">-</span> <span class="n">final_position</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;loss: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loss</span><span class="p">))</span>
+
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+    <span class="c1"># Manually update weights using gradient descent. Wrap in torch.no_grad()</span>
+    <span class="c1"># because weights have requires_grad=True, but we don&#39;t need to track this</span>
+    <span class="c1"># in autograd.</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="n">mass</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">mass</span><span class="o">.</span><span class="n">grad</span>
+        <span class="n">mass</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="automatically-initializing-inertia">
+<h2>Automatically Initializing Inertia<a class="headerlink" href="#automatically-initializing-inertia" title="Permalink to this headline">¶</a></h2>
+<p>If you have custom colliders and you’d like to automatically compute inertia values for them, it’s a straightforward process.</p>
+<p>Recall how in <a class="reference internal" href="backprop-through-physics.html#backprop"><span class="std std-ref">Backprop through Physics Timesteps</span></a> you created <code class="code docutils literal notranslate"><span class="pre">boxBody:</span> <span class="pre">nimble.dynamics.BodyNode</span></code> and <code class="code docutils literal notranslate"><span class="pre">boxShape:</span> <span class="pre">nimble.dynamics.ShapeNode</span></code>.</p>
+<p>To automatically compute and set inertia from the shape of colliders, all you need to do is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">massOfBox</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">centerOfMass</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="n">momentOfInertia</span> <span class="o">=</span> <span class="n">boxShape</span><span class="o">.</span><span class="n">getShape</span><span class="p">()</span><span class="o">.</span><span class="n">computeInertia</span><span class="p">(</span><span class="n">massOfBox</span><span class="p">)</span>
+<span class="n">boxBody</span><span class="o">.</span><span class="n">setInertia</span><span class="p">(</span><span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Inertia</span><span class="p">(</span><span class="n">massOfBox</span><span class="p">,</span> <span class="n">centerOfMass</span><span class="p">,</span> <span class="n">momentOfInertia</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="accessing-raw-jacobians.html" class="btn btn-neutral float-right" title="Accessing Jacobians of Dynamics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="inverse-dynamics.html" class="btn btn-neutral float-left" title="Inverse Dynamics (with Contact)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Keenon Werling.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

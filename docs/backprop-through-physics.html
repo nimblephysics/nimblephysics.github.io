@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Backprop through Physics Timesteps &mdash; Nimble Physics 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+
+  
+  
+
+  
+    <link rel="canonical" href="https://nimblephysics.org/backprop-through-physics.html" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Specify Loss in World Space" href="working-in-world-space.html" />
+    <link rel="prev" title="Understand Worlds and Skeletons" href="understanding-worlds.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-worlds.html">Understand Worlds and Skeletons</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Backprop through Physics Timesteps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-the-optimization-problem">Setting up the optimization problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#doing-the-actual-optimization">Doing the actual optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complete-code">Complete Code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="working-in-world-space.html">Specify Loss in World Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="human-body.html">Differentiable Human Body Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Inverse Dynamics (with Contact)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nimble Physics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Backprop through Physics Timesteps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/backprop-through-physics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="backprop-through-physics-timesteps">
+<span id="backprop"></span><h1>Backprop through Physics Timesteps<a class="headerlink" href="#backprop-through-physics-timesteps" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial assumes you’re already familiar with PyTorch. If not, we recommend <a class="reference external" href="https://pytorch.org/tutorials/beginner/pytorch_with_examples.html">this tutorial</a> as a good place to start.</p>
+<p>At a high level, all you need to know about using Nimble is that <code class="code docutils literal notranslate"><span class="pre">nimble.timestep(...)</span></code> is a valid PyTorch function, and everything else is going to work how you’d expect.</p>
+<p>This document will walk you through constructing a super simple example to illustrate passing gradients through physics.
+We’ll have a box starting at a fixed location, flying through space towards a target for 100 timesteps.
+We’ll use PyTorch to help us find an initial velocity for the box so that it ends up as close to the target as possible.</p>
+<p>Note: Yes, solving for initial conditions like this is trivial and could be solved with simble analytical models. You <cite>can</cite> do much more complex optimization in Nimble, but this is a tutorial, so we’re keeping it simple to start out.</p>
+<p>If you’re the type of person who prefers to just look at complete Python code, here’s <a class="reference download internal" download="" href="_downloads/3ef678acaf46d2533e13649d43862536/initial_conditions.py"><code class="xref download docutils literal notranslate"><span class="pre">what</span> <span class="pre">we'll</span> <span class="pre">be</span> <span class="pre">building</span></code></a>.</p>
+<div class="section" id="setting-up-the-optimization-problem">
+<h2>Setting up the optimization problem<a class="headerlink" href="#setting-up-the-optimization-problem" title="Permalink to this headline">¶</a></h2>
+<p>As always, we start by importing Nimble and PyTorch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+</pre></div>
+</div>
+<p>Next up, we’ll create our <code class="code docutils literal notranslate"><span class="pre">world</span></code> and our <code class="code docutils literal notranslate"><span class="pre">box</span></code> (to better understand this code make sure you’ve read <a class="reference internal" href="understanding-worlds.html#worlds"><span class="std std-ref">Understand Worlds and Skeletons</span></a>). We’ll build our skeletons manually:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up the world</span>
+<span class="n">world</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">World</span><span class="p">()</span>
+<span class="n">world</span><span class="o">.</span><span class="n">setGravity</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">world</span><span class="o">.</span><span class="n">setTimeStep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Set up the box</span>
+<span class="n">box</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span><span class="p">()</span>
+<span class="n">boxJoint</span><span class="p">,</span> <span class="n">boxBody</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">createTranslationalJoint2DAndBodyNodePair</span><span class="p">()</span>
+<span class="n">boxShape</span> <span class="o">=</span> <span class="n">boxBody</span><span class="o">.</span><span class="n">createShapeNode</span><span class="p">(</span><span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">BoxShape</span><span class="p">([</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">]))</span>
+<span class="n">boxVisual</span> <span class="o">=</span> <span class="n">boxShape</span><span class="o">.</span><span class="n">createVisualAspect</span><span class="p">()</span>
+<span class="n">boxVisual</span><span class="o">.</span><span class="n">setColor</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="n">world</span><span class="o">.</span><span class="n">addSkeleton</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now that we’ve got a <code class="code docutils literal notranslate"><span class="pre">world</span></code> and a <code class="code docutils literal notranslate"><span class="pre">box</span></code>, we’re going to set up our <code class="code docutils literal notranslate"><span class="pre">torch.Tensor</span></code>’s that we’re going to optimize over:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up initial conditions for optimization</span>
+<span class="n">initial_position</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">initial_velocity</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">world</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">()),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that we don’t set <code class="code docutils literal notranslate"><span class="pre">requires_grad=True</span></code> for the <code class="code docutils literal notranslate"><span class="pre">initial_position</span></code> Tensor, because we won’t be optimizing the <code class="code docutils literal notranslate"><span class="pre">initial_position</span></code>.</p>
+<p>Once we’ve set up our world and our tensors, we’ll set up a GUI so that we can see what we’re doing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up the GUI</span>
+<span class="n">gui</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span><span class="p">(</span><span class="n">world</span><span class="p">)</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">createSphere</span><span class="p">(</span><span class="s2">&quot;goal&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>That last line, where we access the <code class="code docutils literal notranslate"><span class="pre">gui.nativeAPI()</span></code>, is to create a little green sphere in the GUI so that we can easily see where we want the box to end up.</p>
+</div>
+<div class="section" id="doing-the-actual-optimization">
+<h2>Doing the actual optimization<a class="headerlink" href="#doing-the-actual-optimization" title="Permalink to this headline">¶</a></h2>
+<p>Now that we’ve got all the preliminaries out of the way, we can start doing the exciting part!
+We’ll do the following steps over and over again until we’re happy with the result:</p>
+<ol class="arabic simple">
+<li>Run a simulation for 100 timesteps</li>
+<li>Calculate loss (the difference between the box’s final position and our goal)</li>
+<li>Backpropagate the loss through time (using PyTorch’s <code class="code docutils literal notranslate"><span class="pre">loss.backward()</span></code>)</li>
+<li>Update our initial conditions by taking a step in the direction of the gradient</li>
+</ol>
+<p>To run a forward simulation, we’ll just call :code`nimble.timestep()` over and over again. Remember from <a class="reference internal" href="understanding-worlds.html#worlds"><span class="std std-ref">Understand Worlds and Skeletons</span></a> that “state” is just “position” and “velocity” concatenated together:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">state</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">initial_position</span><span class="p">,</span> <span class="n">initial_velocity</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">num_timesteps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_timesteps</span><span class="p">):</span>
+  <span class="n">state</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">timestep</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">world</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">())))</span>
+</pre></div>
+</div>
+<p>As a quality of life improvement, in order to actually see what we’re doing while learning is happening, we’ll need to save the intermediate states into a List, and pass them to our GUI. Let’s do that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">state</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">initial_position</span><span class="p">,</span> <span class="n">initial_velocity</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="p">]</span>
+
+<span class="n">num_timesteps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_timesteps</span><span class="p">):</span>
+  <span class="n">state</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">timestep</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">world</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">())))</span>
+  <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+<span class="c1"># This call will overwrite any previous set of states we were looping from</span>
+<span class="c1"># a previous iteration of gradient descent.</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">loopStates</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With that improvement in place, we can visit <a class="reference external" href="http://localhost:8080">http://localhost:8080</a> during training and see the current trajectory that the optimizer is exploring, and watch as it updates over time.</p>
+<p>After we’ve run our simulation, we need to compute the loss from our simulation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Our loss is just the distance to the origin at the final step</span>
+<span class="n">final_position</span> <span class="o">=</span> <span class="n">state</span><span class="p">[:</span><span class="n">world</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">()]</span>  <span class="c1"># Position is the first half of the state vector</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">final_position</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;loss: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loss</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Since our goal position is just the origin, it’s sufficient to call <code class="code docutils literal notranslate"><span class="pre">final_position.norm()</span></code> to get the distance to the origin for our trajectory.</p>
+<p>Now that we’ve got a PyTorch Tensor holding a single value representing loss, we can use <code class="code docutils literal notranslate"><span class="pre">loss.backward()</span></code> to have PyTorch run backprop for us:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The only reason that the above call works is because <code class="code docutils literal notranslate"><span class="pre">nimble.timestep()</span></code> is a fully differentiable operator that PyTorch can understand. Very cool stuff.</p>
+<p>Last but not least, we can’t forget to actually update the initial velocity of our box! We’ll use an incredibly primitive learning algorithm to update our weights. We’ll just multiply the gradient by 0.01, and add it to the old value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Manually update weights using gradient descent. Wrap in torch.no_grad()</span>
+<span class="c1"># because weights have requires_grad=True, but we don&#39;t need to track this</span>
+<span class="c1"># in autograd.</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+  <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+  <span class="n">initial_velocity</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">initial_velocity</span><span class="o">.</span><span class="n">grad</span>
+  <span class="n">initial_velocity</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>That’s it! Now if we perform those operations over and over again, we’ll be able to watch our initial velocity change until the box’s arc ends up exactly at the origin.</p>
+</div>
+<div class="section" id="complete-code">
+<h2>Complete Code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h2>
+<p>Here’s <a class="reference download internal" download="" href="_downloads/3ef678acaf46d2533e13649d43862536/initial_conditions.py"><code class="xref download docutils literal notranslate"><span class="pre">the</span> <span class="pre">complete</span> <span class="pre">code</span></code></a> we just wrote, or if you’d prefer to copy-paste:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+
+<span class="c1"># Set up the world</span>
+<span class="n">world</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">World</span><span class="p">()</span>
+<span class="n">world</span><span class="o">.</span><span class="n">setGravity</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">world</span><span class="o">.</span><span class="n">setTimeStep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Set up the box</span>
+<span class="n">box</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span><span class="p">()</span>
+<span class="n">boxJoint</span><span class="p">,</span> <span class="n">boxBody</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">createTranslationalJoint2DAndBodyNodePair</span><span class="p">()</span>
+<span class="n">boxShape</span> <span class="o">=</span> <span class="n">boxBody</span><span class="o">.</span><span class="n">createShapeNode</span><span class="p">(</span><span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">BoxShape</span><span class="p">([</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">]))</span>
+<span class="n">boxVisual</span> <span class="o">=</span> <span class="n">boxShape</span><span class="o">.</span><span class="n">createVisualAspect</span><span class="p">()</span>
+<span class="n">boxVisual</span><span class="o">.</span><span class="n">setColor</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="n">world</span><span class="o">.</span><span class="n">addSkeleton</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+
+<span class="c1"># Set up initial conditions for optimization</span>
+<span class="n">initial_position</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">initial_velocity</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">world</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">()),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Set up the GUI</span>
+<span class="n">gui</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span><span class="p">(</span><span class="n">world</span><span class="p">)</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">createSphere</span><span class="p">(</span><span class="s2">&quot;goal&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+  <span class="n">state</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">initial_position</span><span class="p">,</span> <span class="n">initial_velocity</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="p">]</span>
+
+  <span class="n">num_timesteps</span> <span class="o">=</span> <span class="mi">100</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_timesteps</span><span class="p">):</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">timestep</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">world</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">())))</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+  <span class="c1"># This call will overwrite any previous set of states we were looping from</span>
+  <span class="c1"># a previous iteration of gradient descent.</span>
+  <span class="n">gui</span><span class="o">.</span><span class="n">loopStates</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+
+  <span class="c1"># Our loss is just the distance to the origin at the final step</span>
+  <span class="n">final_position</span> <span class="o">=</span> <span class="n">state</span><span class="p">[:</span><span class="n">world</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">()]</span>  <span class="c1"># Position is the first half of the state vector</span>
+  <span class="n">loss</span> <span class="o">=</span> <span class="n">final_position</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;loss: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loss</span><span class="p">))</span>
+
+  <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+  <span class="c1"># Manually update weights using gradient descent. Wrap in torch.no_grad()</span>
+  <span class="c1"># because weights have requires_grad=True, but we don&#39;t need to track this</span>
+  <span class="c1"># in autograd.</span>
+  <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+    <span class="n">initial_velocity</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">initial_velocity</span><span class="o">.</span><span class="n">grad</span>
+    <span class="n">initial_velocity</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="working-in-world-space.html" class="btn btn-neutral float-right" title="Specify Loss in World Space" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="understanding-worlds.html" class="btn btn-neutral float-left" title="Understand Worlds and Skeletons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Keenon Werling.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
