@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Nimble Visualizer</title>
+    <script src="embedded.js"></script>
+  </head>
+  <body style="margin: 0; padding: 0;">
+    <div style="width: 100vw; height: 20vh;">
+      <span style="color: red">Ignore this upper part, this page (with the exception of the 3D viewer) is just something I whipped up with <b>zero effort or design</b>, and is meant <b>solely as a demo for the standalone 3D viewer</b> in the bottom half of the screen.</span>
+      <table style="margin: 10px">
+        <tr>
+          <td>Name:</td>
+          <td><b>Hoffman-Yee_Config_Data</b></td>
+        </tr>
+        <tr>
+          <td>Skeleton:</td>
+          <td><b>Rajagopal 2015</b></td>
+        </tr>
+        <tr>
+          <td>Automatic Fitter Tracking Error:</td>
+          <td><b>0.8 cm RMSE</b></td>
+        </tr>
+        <tr>
+          <td>Human Annotator Tracking Error:</td>
+          <td><b>2.6 cm RMSE</b></td>
+        </tr>
+      </table>
+    </div>  
+    <div style="width: calc(100vw - 2px); height: 75vh; border: 1px solid grey" id="viewer">
+    </div>
+    <script>
+      var standalone = new document.NimbleStandalone(document.getElementById("viewer"));
+      // Much larger file:
+      // https://mocap-processed.s3.us-west-2.amazonaws.com/michael.json
+      standalone.loadRecording(
+        "https://mocap-processed.s3.us-west-2.amazonaws.com/michael.json"
+      );
+    </script>
+  </body>
+  </html>
