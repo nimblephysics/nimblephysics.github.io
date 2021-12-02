@@ -189,8 +189,8 @@ The gold-standard human model in biomechanics is the <a class="reference externa
 This model comes bundled with Nimble, and is fully differentiable! You can create it with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a Rajagopal skeleton and add it to the world</span>
 
-<span class="n">human</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
-<span class="n">world</span><span class="o">.</span><span class="n">addSkeleton</span><span class="p">(</span><span class="n">human</span><span class="p">)</span>
+<span class="n">human</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">world</span><span class="o">.</span><span class="n">addSkeleton</span><span class="p">(</span><span class="n">human</span><span class="o">.</span><span class="n">skeleton</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>That will create a skeleton that looks like the figure below. We’ve called out some of the features of the skeleton in the doc.</p>
