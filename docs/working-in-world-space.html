@@ -1,77 +1,39 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Specify Loss in World Space &mdash; Nimble Physics 0.4.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-  
-
-  
-  
-
-  
     <link rel="canonical" href="https://nimblephysics.org/working-in-world-space.html" />
-
-  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Differentiable Human Body Models" href="human-body.html" />
     <link rel="prev" title="Backprop through Physics Timesteps" href="backprop-through-physics.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html">
-          
-
-          
-            
             <img src="_static/logo.svg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,19 +41,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
@@ -102,80 +53,41 @@
 <li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Inverse Dynamics (with Contact)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Nimble Physics</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>Specify Loss in World Space</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Specify Loss in World Space</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/working-in-world-space.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="specify-loss-in-world-space">
-<h1>Specify Loss in World Space<a class="headerlink" href="#specify-loss-in-world-space" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="specify-loss-in-world-space">
+<h1>Specify Loss in World Space<a class="headerlink" href="#specify-loss-in-world-space" title="Permalink to this heading"></a></h1>
 <p>Once you start using Nimble to work on non-trivial problems, pretty soon you’ll run into an issue:</p>
 <p>Nimble works in <a class="reference external" href="https://en.wikipedia.org/wiki/Generalized_coordinates">generalized coordinates</a>, which is great for efficiency and simulation accuracy, but is terrible if you want to know where things are in world coordinates.
 For example, you might want to know the <code class="code docutils literal notranslate"><span class="pre">(X,Y,Z)</span></code> coordinates of the gripper-hand on your robot arm, so you can use it to specify loss. It’s not trivial to go from a set of joint angles to the <code class="code docutils literal notranslate"><span class="pre">(X,Y,Z)</span></code> position of your gripper-hand, so you’re stuck.</p>
 <p>We’ve built a tool to help you with this! It’s called <code class="code docutils literal notranslate"><span class="pre">nimble.neural.IKMapping</span></code>.</p>
-<p>If you’re impatient, you can download an example <a class="reference download internal" download="" href="_downloads/a4d132a3ebf130de8e1378ee8227c29b/IK_example.zip"><code class="xref download docutils literal notranslate"><span class="pre">using</span> <span class="pre">IKMapping</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">KR5</span> <span class="pre">robot</span></code></a> and figure out how to use <code class="code docutils literal notranslate"><span class="pre">IKMapping</span></code> from context. If you prefer reading a full explanation, read on :)</p>
+<p>If you’re impatient, you can download an example <a class="reference download internal" download="" href="_downloads/e87f1632880355d5d91346ef39caf64d/IK_example.zip"><code class="xref download docutils literal notranslate"><span class="pre">using</span> <span class="pre">IKMapping</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">KR5</span> <span class="pre">robot</span></code></a> and figure out how to use <code class="code docutils literal notranslate"><span class="pre">IKMapping</span></code> from context. If you prefer reading a full explanation, read on :)</p>
 <p>As a recap from <a class="reference internal" href="understanding-worlds.html#worlds"><span class="std std-ref">Understand Worlds and Skeletons</span></a>, remember that we specify ordinary position and velocity in joint space. For example:</p>
 <a class="reference internal image-reference" href="_images/generalized_coords.png"><img alt="_images/generalized_coords.png" src="_images/generalized_coords.png" style="width: 600px;" /></a>
 <p>The goal of our <code class="code docutils literal notranslate"><span class="pre">nimble.neural.IKMapping</span></code> object is to define a map from joint space to world space.</p>
@@ -206,60 +118,43 @@ If instead we want the world velocities, we can call:</p>
 </div>
 <p>To recap, to map joint-space into world-space, follow three steps:</p>
 <ol class="arabic simple">
-<li>Create and configure an <code class="code docutils literal notranslate"><span class="pre">mapping</span> <span class="pre">=</span> <span class="pre">nimble.neural.IKMapping(world)</span></code> object, to specify how you’d like to map objects to world space.</li>
-<li>Configure the <code class="code docutils literal notranslate"><span class="pre">mapping</span></code> by adding one or more nodes to it. To add the (X,Y,Z) position of a node named <code class="code docutils literal notranslate"><span class="pre">head</span></code>, you could write <code class="code docutils literal notranslate"><span class="pre">mapping.addLinearBodyNode(head)</span></code>.</li>
-<li>Call <code class="code docutils literal notranslate"><span class="pre">nimble.map_to_pos(world,</span> <span class="pre">mapping,</span> <span class="pre">state)</span></code> to map (in a PyTorch friendly way) a state vector <code class="code docutils literal notranslate"><span class="pre">state</span></code> to a vector of world space positions.
-Alternatively, you can call <code class="code docutils literal notranslate"><span class="pre">nimble.map_to_vel(world,</span> <span class="pre">mapping,</span> <span class="pre">state)</span></code> to get the velocities in world space for your mappings.</li>
+<li><p>Create and configure an <code class="code docutils literal notranslate"><span class="pre">mapping</span> <span class="pre">=</span> <span class="pre">nimble.neural.IKMapping(world)</span></code> object, to specify how you’d like to map objects to world space.</p></li>
+<li><p>Configure the <code class="code docutils literal notranslate"><span class="pre">mapping</span></code> by adding one or more nodes to it. To add the (X,Y,Z) position of a node named <code class="code docutils literal notranslate"><span class="pre">head</span></code>, you could write <code class="code docutils literal notranslate"><span class="pre">mapping.addLinearBodyNode(head)</span></code>.</p></li>
+<li><p>Call <code class="code docutils literal notranslate"><span class="pre">nimble.map_to_pos(world,</span> <span class="pre">mapping,</span> <span class="pre">state)</span></code> to map (in a PyTorch friendly way) a state vector <code class="code docutils literal notranslate"><span class="pre">state</span></code> to a vector of world space positions.
+Alternatively, you can call <code class="code docutils literal notranslate"><span class="pre">nimble.map_to_vel(world,</span> <span class="pre">mapping,</span> <span class="pre">state)</span></code> to get the velocities in world space for your mappings.</p></li>
 </ol>
-<p>You can download a working example of <a class="reference download internal" download="" href="_downloads/a4d132a3ebf130de8e1378ee8227c29b/IK_example.zip"><code class="xref download docutils literal notranslate"><span class="pre">using</span> <span class="pre">IKMapping</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">KR5</span> <span class="pre">robot</span></code></a> and play around with it.</p>
-</div>
+<p>You can download a working example of <a class="reference download internal" download="" href="_downloads/e87f1632880355d5d91346ef39caf64d/IK_example.zip"><code class="xref download docutils literal notranslate"><span class="pre">using</span> <span class="pre">IKMapping</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">KR5</span> <span class="pre">robot</span></code></a> and play around with it.</p>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="human-body.html" class="btn btn-neutral float-right" title="Differentiable Human Body Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="backprop-through-physics.html" class="btn btn-neutral float-left" title="Backprop through Physics Timesteps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="human-body.html" class="btn btn-neutral float-right" title="Differentiable Human Body Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Keenon Werling.
-
-    </p>
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

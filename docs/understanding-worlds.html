@@ -1,77 +1,39 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Understand Worlds and Skeletons &mdash; Nimble Physics 0.4.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-  
-
-  
-  
-
-  
     <link rel="canonical" href="https://nimblephysics.org/understanding-worlds.html" />
-
-  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Backprop through Physics Timesteps" href="backprop-through-physics.html" />
     <link rel="prev" title="Get Started in 2 Minutes" href="quick-start.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html">
-          
-
-          
-            
             <img src="_static/logo.svg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,19 +41,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
@@ -109,80 +60,41 @@
 <li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Inverse Dynamics (with Contact)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Nimble Physics</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>Understand Worlds and Skeletons</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Understand Worlds and Skeletons</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/understanding-worlds.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="understand-worlds-and-skeletons">
-<span id="worlds"></span><h1>Understand Worlds and Skeletons<a class="headerlink" href="#understand-worlds-and-skeletons" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="understand-worlds-and-skeletons">
+<span id="worlds"></span><h1>Understand Worlds and Skeletons<a class="headerlink" href="#understand-worlds-and-skeletons" title="Permalink to this heading"></a></h1>
 <p>Nimble models a World as a set of Skeletons. Each Skeleton is composed of a set of joints, attaching together rigid bodies.
 We’ll first understand how Skeletons work, and then we’ll discuss how Worlds add convenient methods for groups of Skeletons.</p>
-<div class="section" id="generalized-coordinates-position-and-velocity">
-<h2>Generalized Coordinates: Position and Velocity<a class="headerlink" href="#generalized-coordinates-position-and-velocity" title="Permalink to this headline">¶</a></h2>
-<p>As a first example, we’ll use the <a class="reference download internal" download="" href="_downloads/eade9e40b869b952d0c3a23cca81b1b8/KR5.zip"><code class="xref download docutils literal notranslate"><span class="pre">KR5</span> <span class="pre">Robot</span></code></a>. That zip file contains a KR5 robot in URDF format, a convenient ground object, meshes to use when rendering the robot, and a <code class="code docutils literal notranslate"><span class="pre">demo.py</span></code> file that contains the following code:</p>
+<section id="generalized-coordinates-position-and-velocity">
+<h2>Generalized Coordinates: Position and Velocity<a class="headerlink" href="#generalized-coordinates-position-and-velocity" title="Permalink to this heading"></a></h2>
+<p>As a first example, we’ll use the <a class="reference download internal" download="" href="_downloads/99de17ddcea1eb2a2d95350a5d5f6f26/KR5.zip"><code class="xref download docutils literal notranslate"><span class="pre">KR5</span> <span class="pre">Robot</span></code></a>. That zip file contains a KR5 robot in URDF format, a convenient ground object, meshes to use when rendering the robot, and a <code class="code docutils literal notranslate"><span class="pre">demo.py</span></code> file that contains the following code:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
@@ -215,22 +127,22 @@ We’ll first understand how Skeletons work, and then we’ll discuss how Worlds
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">arm</span><span class="o">.</span><span class="n">setVelocities</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="types-of-joints">
-<h2>Types of Joints<a class="headerlink" href="#types-of-joints" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="types-of-joints">
+<h2>Types of Joints<a class="headerlink" href="#types-of-joints" title="Permalink to this heading"></a></h2>
 <p>Nimble comes with built-in support for many different Joint types. Here are a few common ones:</p>
 <a class="reference internal image-reference" href="_images/joints.svg"><img alt="_images/joints.svg" src="_images/joints.svg" width="700" /></a>
 <ul class="simple">
-<li><strong>RevoluteJoint</strong>: This is a joint that takes up a single slot in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code> (i.e. it has a single degree-of-freedom), that rotates along an axis. The KR5 robot from the previous section uses only <code class="code docutils literal notranslate"><span class="pre">RevoluteJoint</span></code>’s.</li>
-<li><strong>PrismaticJoint</strong>: This is a joint with a single degree-of-freedom, that translates along an axis.</li>
-<li><strong>TranslationalJoint2D</strong>: This allows a child to translate in two dimensions relative to its parent. It takes up two slots in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code>, since it needs to express both X and Y translation.</li>
-<li><strong>TranslationalJoint</strong>: This allows a child to translate in all three dimensions relative to its parent. It takes up three slots in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code>, since it needs to express X, Y and Z translation.</li>
-<li><strong>BallJoint</strong>: This allows a child to rotate freely in 3 dimensions relative to its parent. Unlike a sequence of 3 <code class="code docutils literal notranslate"><span class="pre">RevoluteJoint</span></code>’s, this does not suffer from <a class="reference external" href="https://en.wikipedia.org/wiki/Gimbal_lock">Gimbal Lock</a>, because it uses <a class="reference external" href="https://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation">exponential coordinates</a> to store rotations. This has 3 degrees of freedom.</li>
-<li><strong>FreeJoint</strong>: This is basically a <code class="code docutils literal notranslate"><span class="pre">TranslationalJoint</span></code> glued to a <code class="code docutils literal notranslate"><span class="pre">BallJoint</span></code> for convenience. Its first 3 parameters refer to rotation, using <code class="code docutils literal notranslate"><span class="pre">BallJoint</span></code> semantics, and its last 3 parameters refer to translation.</li>
+<li><p><strong>RevoluteJoint</strong>: This is a joint that takes up a single slot in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code> (i.e. it has a single degree-of-freedom), that rotates along an axis. The KR5 robot from the previous section uses only <code class="code docutils literal notranslate"><span class="pre">RevoluteJoint</span></code>’s.</p></li>
+<li><p><strong>PrismaticJoint</strong>: This is a joint with a single degree-of-freedom, that translates along an axis.</p></li>
+<li><p><strong>TranslationalJoint2D</strong>: This allows a child to translate in two dimensions relative to its parent. It takes up two slots in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code>, since it needs to express both X and Y translation.</p></li>
+<li><p><strong>TranslationalJoint</strong>: This allows a child to translate in all three dimensions relative to its parent. It takes up three slots in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code>, since it needs to express X, Y and Z translation.</p></li>
+<li><p><strong>BallJoint</strong>: This allows a child to rotate freely in 3 dimensions relative to its parent. Unlike a sequence of 3 <code class="code docutils literal notranslate"><span class="pre">RevoluteJoint</span></code>’s, this does not suffer from <a class="reference external" href="https://en.wikipedia.org/wiki/Gimbal_lock">Gimbal Lock</a>, because it uses <a class="reference external" href="https://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation">exponential coordinates</a> to store rotations. This has 3 degrees of freedom.</p></li>
+<li><p><strong>FreeJoint</strong>: This is basically a <code class="code docutils literal notranslate"><span class="pre">TranslationalJoint</span></code> glued to a <code class="code docutils literal notranslate"><span class="pre">BallJoint</span></code> for convenience. Its first 3 parameters refer to rotation, using <code class="code docutils literal notranslate"><span class="pre">BallJoint</span></code> semantics, and its last 3 parameters refer to translation.</p></li>
 </ul>
-</div>
-<div class="section" id="skeletons-and-the-origin">
-<h2>Skeletons and the Origin<a class="headerlink" href="#skeletons-and-the-origin" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="skeletons-and-the-origin">
+<h2>Skeletons and the Origin<a class="headerlink" href="#skeletons-and-the-origin" title="Permalink to this heading"></a></h2>
 <p>Each Skeleton is tree of joints, whose root is <cite>always rigidly attached to the origin</cite>.</p>
 <p>This is a key point! <cite>Nothing</cite> in Nimble is “free floating”. We simulate things that are “free floating” by including a root joint in the Skeleton that lets the rest of the skeleton move relative to the world.</p>
 <p>As an example of something rigidly anchored to the origin, here’s an example of how joints connect body nodes together in a cartoon robot arm:</p>
@@ -238,12 +150,12 @@ We’ll first understand how Skeletons work, and then we’ll discuss how Worlds
 <p>If you want a Skeleton that is free to move around in 3D space, the Skeleton needs to include a joint (or several joints) that allow translation and rotation between the origin and the base of the robot. Here’s an example of a box that’s free to move and rotate around in 3D space.</p>
 <a class="reference internal image-reference" href="_images/skeleton_hierarchy_free.svg"><img alt="_images/skeleton_hierarchy_free.svg" src="_images/skeleton_hierarchy_free.svg" width="400" /></a>
 <p>We’ll see how to construct these Skeletons manually using the Nimble API in future tutorials, but that’s enough detail for now.</p>
-</div>
-<div class="section" id="putting-it-together-the-world">
-<h2>Putting it Together: The World<a class="headerlink" href="#putting-it-together-the-world" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="putting-it-together-the-world">
+<h2>Putting it Together: The World<a class="headerlink" href="#putting-it-together-the-world" title="Permalink to this heading"></a></h2>
 <p>The World is just a list of Skeleton objects. Each Skeleton is attached to the same origin point.
 Their position vectors are concatenated together to form the World’s position vector, in the order the skeletons were added to the world.</p>
-<p>When there’s only a single skeleton in the world, as in our <a class="reference download internal" download="" href="_downloads/eade9e40b869b952d0c3a23cca81b1b8/KR5.zip"><code class="xref download docutils literal notranslate"><span class="pre">KR5</span> <span class="pre">Robot</span></code></a> example from earlier, then:</p>
+<p>When there’s only a single skeleton in the world, as in our <a class="reference download internal" download="" href="_downloads/99de17ddcea1eb2a2d95350a5d5f6f26/KR5.zip"><code class="xref download docutils literal notranslate"><span class="pre">KR5</span> <span class="pre">Robot</span></code></a> example from earlier, then:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">world</span><span class="o">.</span><span class="n">getPositions</span><span class="p">()</span> <span class="o">==</span> <span class="n">arm</span><span class="o">.</span><span class="n">getPositions</span><span class="p">()</span> <span class="c1"># True</span>
 </pre></div>
 </div>
@@ -251,13 +163,13 @@ Their position vectors are concatenated together to form the World’s position 
 <p>Likewise, <code class="code docutils literal notranslate"><span class="pre">setPositions()</span></code>, <code class="code docutils literal notranslate"><span class="pre">getVelocities()</span></code>, <code class="code docutils literal notranslate"><span class="pre">setVelocities()</span></code> all work the same way.</p>
 <p>As a convenience, the World object also allows you to deal with position and velocity at the same time using the <code class="code docutils literal notranslate"><span class="pre">getState()</span></code> and <code class="code docutils literal notranslate"><span class="pre">setState()</span></code> methods.
 <code class="code docutils literal notranslate"><span class="pre">getState()</span></code> returns the vector from <code class="code docutils literal notranslate"><span class="pre">setPositions()</span></code> concatenated to <code class="code docutils literal notranslate"><span class="pre">getVelocities()</span></code>. Likewise, <code class="code docutils literal notranslate"><span class="pre">setState()</span></code> will take the first half of the passed in vector and use it to <code class="code docutils literal notranslate"><span class="pre">setPositions()</span></code>, and the second half to call <code class="code docutils literal notranslate"><span class="pre">setVelocities()</span></code>.</p>
-</div>
-<div class="section" id="control-forces-and-the-action-space">
-<h2>Control Forces and the Action Space<a class="headerlink" href="#control-forces-and-the-action-space" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="control-forces-and-the-action-space">
+<h2>Control Forces and the Action Space<a class="headerlink" href="#control-forces-and-the-action-space" title="Permalink to this heading"></a></h2>
 <p>So far, we’ve learned how to understand our Skeletons, combine them in a World, and control their position and velocity.</p>
 <p>Often, though, we’re interested in modelling situtations where our robots are able to use motors to control themselves.</p>
 <p>To simulate this, Nimble allows you to set “control forces” on Skeletons. Each degree of freedom (i.e. each index in the position vector) can have a “control force” applied to it of your choosing.</p>
-<p>Returning to our <a class="reference download internal" download="" href="_downloads/eade9e40b869b952d0c3a23cca81b1b8/KR5.zip"><code class="xref download docutils literal notranslate"><span class="pre">KR5</span> <span class="pre">Robot</span></code></a> example from earlier, let’s try the command:</p>
+<p>Returning to our <a class="reference download internal" download="" href="_downloads/99de17ddcea1eb2a2d95350a5d5f6f26/KR5.zip"><code class="xref download docutils literal notranslate"><span class="pre">KR5</span> <span class="pre">Robot</span></code></a> example from earlier, let’s try the command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">world</span><span class="o">.</span><span class="n">setControlForces</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -281,55 +193,38 @@ where by excluding forces from the action space you can ensure they’re always 
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">world</span><span class="o">.</span><span class="n">setControlForces</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="backprop-through-physics.html" class="btn btn-neutral float-right" title="Backprop through Physics Timesteps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="quick-start.html" class="btn btn-neutral float-left" title="Get Started in 2 Minutes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="backprop-through-physics.html" class="btn btn-neutral float-right" title="Backprop through Physics Timesteps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Keenon Werling.
-
-    </p>
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

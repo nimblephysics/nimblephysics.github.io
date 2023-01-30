@@ -1,77 +1,39 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>System Identification &mdash; Nimble Physics 0.4.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-  
-
-  
-  
-
-  
     <link rel="canonical" href="https://nimblephysics.org/system-identification.html" />
-
-  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Accessing Jacobians of Dynamics" href="accessing-raw-jacobians.html" />
     <link rel="prev" title="Inverse Dynamics (with Contact)" href="inverse-dynamics.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html">
-          
-
-          
-            
             <img src="_static/logo.svg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,19 +41,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
@@ -106,84 +57,45 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Nimble Physics</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>System Identification</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">System Identification</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/system-identification.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="system-identification">
-<h1>System Identification<a class="headerlink" href="#system-identification" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="system-identification">
+<h1>System Identification<a class="headerlink" href="#system-identification" title="Permalink to this heading"></a></h1>
 <p>It’s possible to use Nimble to fit the parameters of your simulation to observed real-world data.
 We’re actively working on adding more features to Nimble, but so far we support backprop into mass and inertia properties.</p>
 <p>This document will walk you through constructing a super simple example to illustrate using backprop to learn inertia properties.
 We’ll again use a simple box, just like in <a class="reference internal" href="backprop-through-physics.html#backprop"><span class="std std-ref">Backprop through Physics Timesteps</span></a>.
 We’ll try to recover what the mass of our box should’ve been in order to reach a target position after 100 timesteps of a [10, 10] force in the x and y directions.</p>
 <p>Note: Much like in <a class="reference internal" href="backprop-through-physics.html#backprop"><span class="std std-ref">Backprop through Physics Timesteps</span></a>, solving for mass like this is trivial and could be solved with simble analytical models. You <cite>can</cite> do much more complex optimization in Nimble, but this is a tutorial, so we’re keeping it simple to start out.</p>
-<p>If you’re the type of person who prefers to just look at complete Python code, here’s <a class="reference download internal" download="" href="_downloads/b66363d64422de48e722154bd402147a/tune_mass.py"><code class="xref download docutils literal notranslate"><span class="pre">what</span> <span class="pre">we'll</span> <span class="pre">be</span> <span class="pre">building</span></code></a>.</p>
-<div class="section" id="tuning-mass">
-<h2>Tuning mass<a class="headerlink" href="#tuning-mass" title="Permalink to this headline">¶</a></h2>
+<p>If you’re the type of person who prefers to just look at complete Python code, here’s <a class="reference download internal" download="" href="_downloads/669ec841c9db8b22b29be3960b1e351b/tune_mass.py"><code class="xref download docutils literal notranslate"><span class="pre">what</span> <span class="pre">we'll</span> <span class="pre">be</span> <span class="pre">building</span></code></a>.</p>
+<section id="tuning-mass">
+<h2>Tuning mass<a class="headerlink" href="#tuning-mass" title="Permalink to this heading"></a></h2>
 <p>Now that we’ve learned how to tune the initial velocity in <a class="reference internal" href="backprop-through-physics.html#backprop"><span class="std std-ref">Backprop through Physics Timesteps</span></a>, let’s take a look at
 how to do the same for mass. The code is largely the same, except for a few
 changes. First, we need to register with Nimble that we’re going to be learning the mass of our box body:</p>
@@ -260,9 +172,9 @@ optimize the mass value.</p>
         <span class="n">mass</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="automatically-initializing-inertia">
-<h2>Automatically Initializing Inertia<a class="headerlink" href="#automatically-initializing-inertia" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="automatically-initializing-inertia">
+<h2>Automatically Initializing Inertia<a class="headerlink" href="#automatically-initializing-inertia" title="Permalink to this heading"></a></h2>
 <p>If you have custom colliders and you’d like to automatically compute inertia values for them, it’s a straightforward process.</p>
 <p>Recall how in <a class="reference internal" href="backprop-through-physics.html#backprop"><span class="std std-ref">Backprop through Physics Timesteps</span></a> you created <code class="code docutils literal notranslate"><span class="pre">boxBody:</span> <span class="pre">nimble.dynamics.BodyNode</span></code> and <code class="code docutils literal notranslate"><span class="pre">boxShape:</span> <span class="pre">nimble.dynamics.ShapeNode</span></code>.</p>
 <p>To automatically compute and set inertia from the shape of colliders, all you need to do is:</p>
@@ -272,55 +184,38 @@ optimize the mass value.</p>
 <span class="n">boxBody</span><span class="o">.</span><span class="n">setInertia</span><span class="p">(</span><span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Inertia</span><span class="p">(</span><span class="n">massOfBox</span><span class="p">,</span> <span class="n">centerOfMass</span><span class="p">,</span> <span class="n">momentOfInertia</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="accessing-raw-jacobians.html" class="btn btn-neutral float-right" title="Accessing Jacobians of Dynamics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="inverse-dynamics.html" class="btn btn-neutral float-left" title="Inverse Dynamics (with Contact)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="accessing-raw-jacobians.html" class="btn btn-neutral float-right" title="Accessing Jacobians of Dynamics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Keenon Werling.
-
-    </p>
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

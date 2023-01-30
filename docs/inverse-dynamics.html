@@ -1,77 +1,40 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Inverse Dynamics (with Contact) &mdash; Nimble Physics 0.4.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-  
-
-  
-  
-
-  
     <link rel="canonical" href="https://nimblephysics.org/inverse-dynamics.html" />
-
-  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="System Identification" href="system-identification.html" />
     <link rel="prev" title="Differentiable Human Body Models" href="human-body.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html">
-          
-
-          
-            
             <img src="_static/logo.svg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,19 +42,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
@@ -107,98 +59,59 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Nimble Physics</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>Inverse Dynamics (with Contact)</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Inverse Dynamics (with Contact)</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/inverse-dynamics.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="inverse-dynamics-with-contact">
-<span id="id"></span><h1>Inverse Dynamics (with Contact)<a class="headerlink" href="#inverse-dynamics-with-contact" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="inverse-dynamics-with-contact">
+<span id="id"></span><h1>Inverse Dynamics (with Contact)<a class="headerlink" href="#inverse-dynamics-with-contact" title="Permalink to this heading"></a></h1>
 <p>It’s often useful to be able to reconstruct the forces/torques necessary to create an observed motion.</p>
 <p>To learn about how to do this, let’s recall the definition of a timestep (in matrix notation):</p>
-<p><img class="math" src="_images/math/9ceedc7f9f6591591315f0cf99b92cdd9584beca.png" alt="v_{t+1} = v_t + \Delta t (M^{-1}(C + f_t))"/></p>
-<p>Here <img class="math" src="_images/math/450a8e2c2320d77181e0d4fc68c947e9a5de8ecb.png" alt="M"/> is the mass matrix, and <img class="math" src="_images/math/afce44aa7c55836ca9345404c22fc7b599d2ed84.png" alt="C"/> is the coriolis force vector, and <img class="math" src="_images/math/ab4442a3dda16c5ef46ab72e0488b230cfb76dbc.png" alt="f_t"/> is the control force applied.</p>
-<div class="section" id="plain-vanilla-inverse-dynamics">
-<h2>“Plain Vanilla” Inverse Dynamics<a class="headerlink" href="#plain-vanilla-inverse-dynamics" title="Permalink to this headline">¶</a></h2>
-<p>The basic inverse dynamics problem is to solve for <img class="math" src="_images/math/ab4442a3dda16c5ef46ab72e0488b230cfb76dbc.png" alt="f_t"/> necessary to get a given <img class="math" src="_images/math/2ecb6c8b877292ca1b8e10eb200b4c9c9c5740e9.png" alt="v_{t+1}"/> at the next timestep.
+<p><span class="math notranslate nohighlight">\(v_{t+1} = v_t + \Delta t (M^{-1}(C + f_t))\)</span></p>
+<p>Here <span class="math notranslate nohighlight">\(M\)</span> is the mass matrix, and <span class="math notranslate nohighlight">\(C\)</span> is the coriolis force vector, and <span class="math notranslate nohighlight">\(f_t\)</span> is the control force applied.</p>
+<section id="plain-vanilla-inverse-dynamics">
+<h2>“Plain Vanilla” Inverse Dynamics<a class="headerlink" href="#plain-vanilla-inverse-dynamics" title="Permalink to this heading"></a></h2>
+<p>The basic inverse dynamics problem is to solve for <span class="math notranslate nohighlight">\(f_t\)</span> necessary to get a given <span class="math notranslate nohighlight">\(v_{t+1}\)</span> at the next timestep.
 Rearranging the timestep equation, we end up with:</p>
-<p><img class="math" src="_images/math/67b3219684a8660b63caa8e27106ff97e117a4b3.png" alt="f_t = M(\frac{v_{t+1} - v_t}{\Delta t}) - C"/></p>
-<p>Note that another name for <img class="math" src="_images/math/b612b1146b62697edd0e636bc68e2729df5d919d.png" alt="\frac{v_{t+1} - v_t}{\Delta t}"/> is acceleration, which we can denote <img class="math" src="_images/math/2b7812e7cf102b3539489ffb0d586277513ee04c.png" alt="a_t"/>.</p>
+<p><span class="math notranslate nohighlight">\(f_t = M(\frac{v_{t+1} - v_t}{\Delta t}) - C\)</span></p>
+<p>Note that another name for <span class="math notranslate nohighlight">\(\frac{v_{t+1} - v_t}{\Delta t}\)</span> is acceleration, which we can denote <span class="math notranslate nohighlight">\(a_t\)</span>.</p>
 <p>In its simplest form, when dealing with a robot arm rigidly attached to a base on the ground, the above equation solves the problem.</p>
 <p>This can be solved in code by calling <code class="code docutils literal notranslate"><span class="pre">Skeleton.getInverseDynamics(next_vel)</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">control_forces</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">getInverseDynamics</span><span class="p">(</span><span class="n">desired_next_vel</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This equation doesn’t respect joint force limits, because it’s solving a linear system of equations which (if <img class="math" src="_images/math/450a8e2c2320d77181e0d4fc68c947e9a5de8ecb.png" alt="M"/> is full rank) has only one solution.</p>
+<p>This equation doesn’t respect joint force limits, because it’s solving a linear system of equations which (if <span class="math notranslate nohighlight">\(M\)</span> is full rank) has only one solution.</p>
 <p>Here we run into problems. Suppose you’re analyzing a skeleton that’s not firmly attached to the ground (maybe a walking robot, or a human). The root joint of such a skeleton is usually a <code class="code docutils literal notranslate"><span class="pre">FreeJoint</span></code>, which encodes the 6 degrees of freedom (3 rotation, 3 translation) to allow the root of the skeleton to move freely relative to the origin.
 (For more intuition about these root joints, re-read <a class="reference internal" href="understanding-worlds.html#worlds"><span class="std std-ref">Understand Worlds and Skeletons</span></a>). The problem is that <code class="code docutils literal notranslate"><span class="pre">getInverseDynamics(...)</span></code> <em>will apply forces to the root joint!</em></p>
 <p>That’s very unrealistic. It’s kind of like attaching your walking robot to an imaginary crane, that’s able to exert arbitrary forces and torques at their root joint.
 It’d be better if we could somehow ensure that the forces were coming through one or both feet in contact with the ground.</p>
-</div>
-<div class="section" id="inverse-dynamics-with-one-contact">
-<h2>Inverse Dynamics with One Contact<a class="headerlink" href="#inverse-dynamics-with-one-contact" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="inverse-dynamics-with-one-contact">
+<h2>Inverse Dynamics with One Contact<a class="headerlink" href="#inverse-dynamics-with-one-contact" title="Permalink to this heading"></a></h2>
 <a class="reference internal image-reference" href="_images/ContactID.png"><img alt="_images/ContactID.png" src="_images/ContactID.png" style="width: 600px;" /></a>
 <p>Solving that problem is the goal of <code class="code docutils literal notranslate"><span class="pre">getContactInverseDynamics(...)</span></code>. This method will only work if your robot’s root joint is a <code class="code docutils literal notranslate"><span class="pre">FreeJoint</span></code> (or a <code class="code docutils literal notranslate"><span class="pre">FreeEulerJoint</span></code>) so that the robot is moving freely through space.
 Assuming that’s the case, you can ask for a set of joint torques that the robot’s motors could actually achieve (leaving the first 6 degrees of freedom un-actuated), and the necessary contact force at the specified contact body.</p>
@@ -210,30 +123,30 @@ Assuming that’s the case, you can ask for a set of joint torques that the robo
 </div>
 <p>If you’re not curious about the math, you can skip to the next section. For the curious-minded, read on:</p>
 <p>We’d like to prevent the inverse dynamics solver from applying any un-physical forces at the root (<code class="code docutils literal notranslate"><span class="pre">f_t[0:6]</span> <span class="pre">==</span> <span class="pre">0</span></code>), which will add 6 equations to our linear system.
-That by itself would over-constrain our system, and make it unsolvable, because we’d have <img class="math" src="_images/math/e11f2701c4a39c7fe543a6c4150b421d50f1c159.png" alt="n"/> variables and <img class="math" src="_images/math/9729d3bec47cdf0fe304ae6fb48881a07a1bb78c.png" alt="n+6"/> equations (assuming <img class="math" src="_images/math/e11f2701c4a39c7fe543a6c4150b421d50f1c159.png" alt="n"/> is the number of degrees of freedom for our skeleton).</p>
+That by itself would over-constrain our system, and make it unsolvable, because we’d have <span class="math notranslate nohighlight">\(n\)</span> variables and <span class="math notranslate nohighlight">\(n+6\)</span> equations (assuming <span class="math notranslate nohighlight">\(n\)</span> is the number of degrees of freedom for our skeleton).</p>
 <p>We’ll resolve that issue by allowing the system to solve for any arbitrary 6-degree-of-freedom “wrench” (that’s a 3-dof force <em>and</em> a 3-dof torque) at the contact body.
-That adds 6 new variables, bringing us to <img class="math" src="_images/math/9729d3bec47cdf0fe304ae6fb48881a07a1bb78c.png" alt="n+6"/> variables and <img class="math" src="_images/math/9729d3bec47cdf0fe304ae6fb48881a07a1bb78c.png" alt="n+6"/> equations. This is now a solvable system, so let’s proceed to solve it (efficiently).</p>
-<p>If we introduce the contact wrench <img class="math" src="_images/math/ecd1ee2a1cd226b40c37e079aca62398d4b774f5.png" alt="w"/> and the contact body’s <a class="reference external" href="https://www.rosroboticslearning.com/jacobian">Jacobian</a> <img class="math" src="_images/math/ca54d3a4a8a221da5f7a13a28ec6a45b4abcc5a5.png" alt="J"/>, our forward dynamics equation is:</p>
-<p><img class="math" src="_images/math/3e65b4f34c21eea032550a804cb5026f8e514b40.png" alt="v_{t+1} = v_t + \Delta t (M^{-1}(C + f_t + J^T w))"/></p>
-<p>Our inverse dynamics equation now looks like solving for <img class="math" src="_images/math/ab4442a3dda16c5ef46ab72e0488b230cfb76dbc.png" alt="f_t"/> and <img class="math" src="_images/math/ecd1ee2a1cd226b40c37e079aca62398d4b774f5.png" alt="w"/> in the following equations:</p>
-<p><img class="math" src="_images/math/88895d0e0ac8fca7bae736ce11e7a6fa48154711.png" alt="f_t = M(\frac{v_{t+1} - v_t}{\Delta t}) - C - J^T w"/></p>
-<p><img class="math" src="_images/math/a711b9bccbf11683eaf7fe7e63ccc85f111bd724.png" alt="f_t[0:6] = 0"/></p>
-<p>We can solve this in stages. We know that the first 6 entries of the equation <img class="math" src="_images/math/8eed932bd9aed797e4290c779421b793f9771e4e.png" alt="M(\frac{v_{t+1} - v_t}{\Delta t}) - C - J^T w"/> must be zero, so that’s 6 equations and 6 unknowns, and allows us to solve for <img class="math" src="_images/math/ecd1ee2a1cd226b40c37e079aca62398d4b774f5.png" alt="w"/>:</p>
-<p><img class="math" src="_images/math/8983762df578e3a91816911851a50375061dc50b.png" alt="w = J^{\dagger T} * (M(\frac{v_{t+1} - v_t}{\Delta t}) - C)[0:6]"/></p>
-<p>Then we can use <img class="math" src="_images/math/ecd1ee2a1cd226b40c37e079aca62398d4b774f5.png" alt="w"/>, and plug it back into our main equation:</p>
-<p><img class="math" src="_images/math/88895d0e0ac8fca7bae736ce11e7a6fa48154711.png" alt="f_t = M(\frac{v_{t+1} - v_t}{\Delta t}) - C - J^T w"/></p>
-<p>As a sanity check, the first six entries of <img class="math" src="_images/math/ab4442a3dda16c5ef46ab72e0488b230cfb76dbc.png" alt="f_t"/> should be tiny tiny values, and are only non-zero because computers do finite precision arithmetic. We can then safely set them to zero, and return the whole batch.</p>
-</div>
-<div class="section" id="inverse-dynamics-with-multiple-contacts">
-<h2>Inverse Dynamics with Multiple Contacts<a class="headerlink" href="#inverse-dynamics-with-multiple-contacts" title="Permalink to this headline">¶</a></h2>
+That adds 6 new variables, bringing us to <span class="math notranslate nohighlight">\(n+6\)</span> variables and <span class="math notranslate nohighlight">\(n+6\)</span> equations. This is now a solvable system, so let’s proceed to solve it (efficiently).</p>
+<p>If we introduce the contact wrench <span class="math notranslate nohighlight">\(w\)</span> and the contact body’s <a class="reference external" href="https://www.rosroboticslearning.com/jacobian">Jacobian</a> <span class="math notranslate nohighlight">\(J\)</span>, our forward dynamics equation is:</p>
+<p><span class="math notranslate nohighlight">\(v_{t+1} = v_t + \Delta t (M^{-1}(C + f_t + J^T w))\)</span></p>
+<p>Our inverse dynamics equation now looks like solving for <span class="math notranslate nohighlight">\(f_t\)</span> and <span class="math notranslate nohighlight">\(w\)</span> in the following equations:</p>
+<p><span class="math notranslate nohighlight">\(f_t = M(\frac{v_{t+1} - v_t}{\Delta t}) - C - J^T w\)</span></p>
+<p><span class="math notranslate nohighlight">\(f_t[0:6] = 0\)</span></p>
+<p>We can solve this in stages. We know that the first 6 entries of the equation <span class="math notranslate nohighlight">\(M(\frac{v_{t+1} - v_t}{\Delta t}) - C - J^T w\)</span> must be zero, so that’s 6 equations and 6 unknowns, and allows us to solve for <span class="math notranslate nohighlight">\(w\)</span>:</p>
+<p><span class="math notranslate nohighlight">\(w = J^{\dagger T} * (M(\frac{v_{t+1} - v_t}{\Delta t}) - C)[0:6]\)</span></p>
+<p>Then we can use <span class="math notranslate nohighlight">\(w\)</span>, and plug it back into our main equation:</p>
+<p><span class="math notranslate nohighlight">\(f_t = M(\frac{v_{t+1} - v_t}{\Delta t}) - C - J^T w\)</span></p>
+<p>As a sanity check, the first six entries of <span class="math notranslate nohighlight">\(f_t\)</span> should be tiny tiny values, and are only non-zero because computers do finite precision arithmetic. We can then safely set them to zero, and return the whole batch.</p>
+</section>
+<section id="inverse-dynamics-with-multiple-contacts">
+<h2>Inverse Dynamics with Multiple Contacts<a class="headerlink" href="#inverse-dynamics-with-multiple-contacts" title="Permalink to this heading"></a></h2>
 <p>What if both our robot/person has more than one foot touching the ground?
 Following the same strategy outlined in the last section, now we see that our equations no longer have a unique solution.</p>
-<p>With <img class="math" src="_images/math/0b7c1e16a3a8a849bb8ffdcdbf86f65fd1f30438.png" alt="k"/> feet touching the ground, we have <img class="math" src="_images/math/9729d3bec47cdf0fe304ae6fb48881a07a1bb78c.png" alt="n+6"/> equations and <img class="math" src="_images/math/0c5560cc166e521167a7b233e94b984174e9b301.png" alt="n+6k"/> variables. That means our system is under-constrained for <img class="math" src="_images/math/06dd4627885a0bebaad0e4d6e0fb5db2e746654a.png" alt="k &gt; 1"/>, and there are lots (infinitely lots, in fact) of potential solutions.</p>
+<p>With <span class="math notranslate nohighlight">\(k\)</span> feet touching the ground, we have <span class="math notranslate nohighlight">\(n+6\)</span> equations and <span class="math notranslate nohighlight">\(n+6k\)</span> variables. That means our system is under-constrained for <span class="math notranslate nohighlight">\(k &gt; 1\)</span>, and there are lots (infinitely lots, in fact) of potential solutions.</p>
 <p>We can choose between these ambiguous solutions in several ways:</p>
 <ul class="simple">
-<li>We can pick the nearest set of contact forces to some initial guess</li>
-<li>We can minimize the torques on the contact forces</li>
-<li>We can try to pick smooth contact forces over time, if we’re solving multiple timesteps at once</li>
+<li><p>We can pick the nearest set of contact forces to some initial guess</p></li>
+<li><p>We can minimize the torques on the contact forces</p></li>
+<li><p>We can try to pick smooth contact forces over time, if we’re solving multiple timesteps at once</p></li>
 </ul>
 <p>To pick the nearest set of contact forces to some initial guess, expressed as a list of 6-vectors <code class="code docutils literal notranslate"><span class="pre">body_wrench_guesses</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">getMultipleContactInverseDynamics</span><span class="p">(</span><span class="n">next_vel</span><span class="p">,</span> <span class="n">contact_bodies_list</span><span class="p">,</span> <span class="n">body_wrench_guesses</span><span class="p">)</span>
@@ -258,55 +171,38 @@ Following the same strategy outlined in the last section, now we see that our eq
 </pre></div>
 </div>
 <p>You can control how the solution trades off between smoothness and minimizing torques with the weighting arguments, <code class="code docutils literal notranslate"><span class="pre">smoothingWeight</span></code> and <code class="code docutils literal notranslate"><span class="pre">minTorqueWeight</span></code>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="system-identification.html" class="btn btn-neutral float-right" title="System Identification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="human-body.html" class="btn btn-neutral float-left" title="Differentiable Human Body Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="system-identification.html" class="btn btn-neutral float-right" title="System Identification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Keenon Werling.
-
-    </p>
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
