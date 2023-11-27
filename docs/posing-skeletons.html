@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Posing Skeletons to Match Data &mdash; Nimble Physics 0.4.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://nimblephysics.org/posing-skeletons.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Computing Skeleton Joint Torques and Forces" href="inverse-dynamics.html" />
+    <link rel="prev" title="Solving Your Own Optimization Problems with Skeletons" href="optimization.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html">
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization.html">Solving Your Own Optimization Problems with Skeletons</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Posing Skeletons to Match Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fitting-joint-centers">Fitting Joint Centers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-marker-data">Working with Marker Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#converting-motion-between-skeleton-types">Converting Motion Between Skeleton Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nimble Physics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Posing Skeletons to Match Data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/posing-skeletons.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="posing-skeletons-to-match-data">
+<h1>Posing Skeletons to Match Data<a class="headerlink" href="#posing-skeletons-to-match-data" title="Permalink to this heading"></a></h1>
+<p>Quite often, you will have various forms of data about a skeleton (for example, the world coordinates of its joint centers) and you will need to
+find a configuration for your <code class="code docutils literal notranslate"><span class="pre">nimble.dynamics.Skeleton</span></code> object that matches your target data as closely as possible.</p>
+<p>This section discusses various kinds of data you might want to fit, and the built-in optimization tools that will fit a skeleton to target data.</p>
+<section id="fitting-joint-centers">
+<h2>Fitting Joint Centers<a class="headerlink" href="#fitting-joint-centers" title="Permalink to this heading"></a></h2>
+<p>Some sensors, like <a class="reference external" href="https://docs.microsoft.com/en-us/azure/kinect-dk/body-joints">Azure Kinect DK</a>, just provide a list of all the joint positions in world space.</p>
+<p>We can rapidly fit a skeleton to those joints using built-in IK methods on the <code class="code docutils literal notranslate"><span class="pre">Skeleton</span></code> object itself.</p>
+<p>Suppose we have a List of joint world positions as Numpy 3-vectors (like from a Kinect sensor), called <code class="code docutils literal notranslate"><span class="pre">targetPositions:</span> <span class="pre">List[np.ndarray]</span></code>.
+Also, suppose we’ve pre-made a list of the corresponding joints in our model, called <code class="code docutils literal notranslate"><span class="pre">bodyJoints:</span> <span class="pre">List[nimble.dynamics.Joint]</span></code>.
+Then, to fit our <code class="code docutils literal notranslate"><span class="pre">Skeleton</span></code> object called <code class="code docutils literal notranslate"><span class="pre">skeleton</span></code> to the joint pose data , we can just call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">skeleton</span><span class="o">.</span><span class="n">fitJointsToWorldPositions</span><span class="p">(</span><span class="n">bodyJoints</span><span class="p">,</span> <span class="n">targetPositions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If we’d like to automatically rescale the skeleton bones as well as positioning it, we can pass the flag <code class="code docutils literal notranslate"><span class="pre">scaleBodies=True</span></code>, as in:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">skeleton</span><span class="o">.</span><span class="n">fitJointsToWorldPositions</span><span class="p">(</span><span class="n">bodyJoints</span><span class="p">,</span> <span class="n">targetPositions</span><span class="p">,</span> <span class="n">scaleBodies</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="working-with-marker-data">
+<h2>Working with Marker Data<a class="headerlink" href="#working-with-marker-data" title="Permalink to this heading"></a></h2>
+<p>Often we have a set of markers mounted on the body, and their 3D positions in world space. For example, this is common in marker-based mocap pipelines.</p>
+<p>If you know how many markers you have, which <code class="code docutils literal notranslate"><span class="pre">BodyNode</span></code> they’re mounted to and at what offset they’re mounted, and where they are in 3D space, there’s a convenient method to run IK to position (and optionally scale) the skeleton to fit the markers as closely as possible.</p>
+<p>Let’s dig into how the markers are specified with an example. Let’s consider the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">human</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+
+<span class="n">markers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">markers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">human</span><span class="o">.</span><span class="n">getBody</span><span class="p">(</span><span class="s2">&quot;tibia_l&quot;</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">markers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">human</span><span class="o">.</span><span class="n">getBody</span><span class="p">(</span><span class="s2">&quot;tibia_r&quot;</span><span class="p">),</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>Each marker is a pair, <code class="code docutils literal notranslate"><span class="pre">(BodyNode,</span> <span class="pre">offset)</span></code>, which registers which <code class="code docutils literal notranslate"><span class="pre">BodyNode</span></code> the marker is mounted to, and what offset (in local space for that <code class="code docutils literal notranslate"><span class="pre">BodyNode</span></code>) the marker is mounted at.
+The above example creates two markers. The fist one is mounted 0.1 units along the Y-axis (in local space) from the left tibia (shin bone). The second one is mounted 0.1 units along the X-axis (in local space) from the right tibia.</p>
+<p>Once we’ve got our markers, a list of their world positions in <code class="code docutils literal notranslate"><span class="pre">targetPositions</span></code>, we only need one more thing. Each marker needs a weight, to tell the IK system how to trade off between different fits when it can’t fit all the markers exactly.
+You can pass in a vector of 1’s (the same length as the <code class="code docutils literal notranslate"><span class="pre">markers</span></code> List) if you want every marker to be treated equally. If you put a 2 in the weights array somewhere, the marker at that index will be weighted twice as much as another marker that has weight 1 when trying to fit the pose of the skeleton.</p>
+<p>With all that in place, we can call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">human</span><span class="o">.</span><span class="n">fitMarkersToWorldPositions</span><span class="p">(</span><span class="n">markers</span><span class="p">,</span> <span class="n">targetPositions</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That’ll move the <code class="code docutils literal notranslate"><span class="pre">human</span></code> skeleton to fit the markers as closely as possible. If you’d like to also automatically rescale the skeleton, you can use the <code class="code docutils literal notranslate"><span class="pre">scaleBodies=True</span></code> flag:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">human</span><span class="o">.</span><span class="n">fitMarkersToWorldPositions</span><span class="p">(</span><span class="n">markers</span><span class="p">,</span> <span class="n">targetPositions</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">scaleBodies</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="converting-motion-between-skeleton-types">
+<h2>Converting Motion Between Skeleton Types<a class="headerlink" href="#converting-motion-between-skeleton-types" title="Permalink to this heading"></a></h2>
+<p>Often you’ll find motion capture datasets you want to use for your project, but they use different skeleton definitions.</p>
+<p>Not to fear, Nimble got a tool for easily retargetting motion across skeleton types! Let’s suppose you’ve got two skeletons, <code class="code docutils literal notranslate"><span class="pre">dataSourceSkeleton</span></code> and <code class="code docutils literal notranslate"><span class="pre">mySkeleton</span></code>.
+You’ve got motion data in the form of a sequence of poses for <code class="code docutils literal notranslate"><span class="pre">dataSourceSkeleton</span></code>, and you’d like to get equivalent motion data for <code class="code docutils literal notranslate"><span class="pre">mySkeleton</span></code>.</p>
+<p>The first thing to do is create a <code class="code docutils literal notranslate"><span class="pre">biomechanics.SkeletonConverter</span></code> object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">converter</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">SkeletonConverter</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">SkeletonConverter</span><span class="p">(</span>
+    <span class="n">mySkeleton</span><span class="p">,</span> <span class="n">dataSourceSkeleton</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next up, we can register the joints across the two bodies that represent the same actual joint on the human body.
+This doesn’t need to be all the joints! Often skeletons will disagree on exactly which joints to express, especially around the shoulders and in the feet.
+We just need a couple of key points along the body, and the more the better.</p>
+<p>For example, here’s a mapping from an <a class="reference external" href="https://amass.is.tue.mpg.de/">AMASS</a> skeleton to the Rajagopal skeleton bundled with Nimble:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;radius_hand_l&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;wrist_l&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;radius_hand_r&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;wrist_r&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;ankle_l&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;ankle_l&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;ankle_r&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;ankle_r&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;mtp_l&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;foot_l&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;mtp_r&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;foot_r&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;walker_knee_l&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;knee_l&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;walker_knee_r&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;knee_r&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;acromial_l&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;shoulder_l&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;acromial_r&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;shoulder_r&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;elbow_l&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;elbow_l&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;elbow_r&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;elbow_r&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;hip_l&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;hip_l&quot;</span><span class="p">))</span>
+<span class="n">converter</span><span class="o">.</span><span class="n">linkJoints</span><span class="p">(</span><span class="n">mySkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;hip_r&quot;</span><span class="p">),</span> <span class="n">dataSourceSkeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;hip_r&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Once you’ve registered the joints, you can now ask the converter to rescale your skeleton to match the proportions of the data source skeleton, and register how the limbs match up for future conversion.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">converter</span><span class="o">.</span><span class="n">rescaleAndPrepTarget</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This shouldn’t take long to complete, and will do its best to scale and orient your skeleton so that the joints you’ve linked up will occupy exactly the same spot in physical space, so that poses can be matched precisely.</p>
+<p>Once everything is prepared, and assuming your time-series motion data from your data source is organized as a matrix <code class="code docutils literal notranslate"><span class="pre">dataSourceSkeletonPoses</span></code> where each column represents one timestep, then converting motion from the data source skeleton to your new skeleton is as easy as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mySkeletonPoses</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convertMotion</span><span class="p">(</span>
+  <span class="n">dataSourceSkeletonPoses</span><span class="p">,</span> <span class="n">logProgress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now you have a matrix <code class="code docutils literal notranslate"><span class="pre">mySkeletonPoses</span></code> where each column contains the position for <code class="code docutils literal notranslate"><span class="pre">mySkeleton</span></code> that most closely matches <code class="code docutils literal notranslate"><span class="pre">dataSourceSkeleton</span></code> at the corresponding column in <code class="code docutils literal notranslate"><span class="pre">dataSourceSkeletonPoses</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="optimization.html" class="btn btn-neutral float-left" title="Solving Your Own Optimization Problems with Skeletons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="inverse-dynamics.html" class="btn btn-neutral float-right" title="Computing Skeleton Joint Torques and Forces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

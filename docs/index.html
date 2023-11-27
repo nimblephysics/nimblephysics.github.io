@@ -46,8 +46,8 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
-<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
-<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization.html">Solving Your Optimization Problems with Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="posing-skeletons.html">Posing Skeletons to Match Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
@@ -81,7 +81,7 @@
   <section id="welcome-to-nimble-s-documentation">
 <h1>Welcome to Nimble’s documentation!<a class="headerlink" href="#welcome-to-nimble-s-documentation" title="Permalink to this heading"></a></h1>
 <p><em>IMPORTANT NOTE:</em> Nimble is currently in beta. We reserve the right to make backwards incompatible changes to the APIs until Nimble reaches <code class="code docutils literal notranslate"><span class="pre">v1.0</span></code>.
-This documentation was written for Nimble <code class="code docutils literal notranslate"><span class="pre">v0.10.28</span></code>, and may or may not work on later versions.</p>
+This documentation was written for Nimble <code class="code docutils literal notranslate"><span class="pre">v0.10.29</span></code>, and may or may not work on later versions.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -107,11 +107,16 @@ This documentation was written for Nimble <code class="code docutils literal not
 <li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#joint-world-locations">Joint World Locations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
-<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="optimizing-skeletons.html#fitting-joint-centers">Fitting Joint Centers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimizing-skeletons.html#working-with-marker-data">Working with Marker Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimizing-skeletons.html#converting-motion-between-skeleton-types">Converting Motion Between Skeleton Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization.html">Solving Your Optimization Problems with Skeletons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="optimization.html#a-brief-intro-to-optimization">A Brief Intro to Optimization:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimization.html#computing-gradients-often-with-jacobians">Computing Gradients (often with Jacobians):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimization.html#how-to-get-access-to-the-derivatives">How to get access to the derivatives:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="posing-skeletons.html">Posing Skeletons to Match Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="posing-skeletons.html#fitting-joint-centers">Fitting Joint Centers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="posing-skeletons.html#working-with-marker-data">Working with Marker Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="posing-skeletons.html#converting-motion-between-skeleton-types">Converting Motion Between Skeleton Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a><ul>

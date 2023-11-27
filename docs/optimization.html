@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solving Your Optimization Problems with Skeletons &mdash; Nimble Physics 0.4.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://nimblephysics.org/optimization.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Posing Skeletons to Match Data" href="posing-skeletons.html" />
+    <link rel="prev" title="Understand Skeletons" href="understanding-skeletons.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html">
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Solving Your Optimization Problems with Skeletons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-brief-intro-to-optimization">A Brief Intro to Optimization:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#computing-gradients-often-with-jacobians">Computing Gradients (often with Jacobians):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-get-access-to-the-derivatives">How to get access to the derivatives:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="posing-skeletons.html">Posing Skeletons to Match Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nimble Physics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Solving Your Optimization Problems with Skeletons</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/optimization.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="solving-your-optimization-problems-with-skeletons">
+<h1>Solving Your Optimization Problems with Skeletons<a class="headerlink" href="#solving-your-optimization-problems-with-skeletons" title="Permalink to this heading"></a></h1>
+<section id="a-brief-intro-to-optimization">
+<h2>A Brief Intro to Optimization:<a class="headerlink" href="#a-brief-intro-to-optimization" title="Permalink to this heading"></a></h2>
+<p>Let’s suppose you have a skeleton, and you would like to find the set of joint angles that minimizes the distance between the skeleton’s wrist and a target point.
+The skeleton’s joint angles are your “parameters”, and the distance between the skeleton’s wrist and the target point is your “loss”.
+We are going to try to find a setting for the parameters that minimize the loss.</p>
+<p>Here is a way to visualize this example problem:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="n">right_wrist</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Joint</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;radius_hand_r&quot;</span><span class="p">)</span>
+
+<span class="c1"># Set an arbitrary target location</span>
+<span class="n">target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+
+<span class="c1"># Get the world location of the wrist</span>
+<span class="n">wrist_pos</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPositions</span><span class="p">([</span><span class="n">right_wrist</span><span class="p">])</span>
+
+<span class="c1"># Create a GUI and serve on port 8080</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span><span class="p">()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+
+<span class="c1"># Render the skeleton to the GUI</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">renderSkeleton</span><span class="p">(</span><span class="n">skeleton</span><span class="p">)</span>
+
+<span class="c1"># Draw a red line connecting the wrist to the target</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">createLine</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;wrist_error&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">wrist_pos</span><span class="p">,</span> <span class="n">target</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+
+<span class="c1"># Compute the loss</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">wrist_pos</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loss: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loss</span><span class="p">))</span>
+
+<span class="c1"># Block until the GUI is closed</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">blockWhileServing</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That will create this scenario:</p>
+<a class="reference internal image-reference" href="_images/optimization_problem_setup.png"><img alt="_images/optimization_problem_setup.png" src="_images/optimization_problem_setup.png" style="width: 600px;" /></a>
+<p>The trouble here is that the relationship between the skeleton’s joint angles and the distance between the skeleton’s wrist and the target point is complicated.
+It is not a simple linear function with a closed form solution.</p>
+<p>Happily, computers are fast, and we don’t <em>need</em> a closed form solution. We just need a way to “bump” a guess for the parameters a tiny bit to make the
+loss a tiny bit smaller, and then we can do that over and over and over again at lightning speed (because computers are fast), and end up with a pretty good answer.</p>
+<p>Here is what that process will look like, slowed down by approximately 1000x to make each step more visible:</p>
+<a class="reference internal image-reference" href="_images/optimization.gif"><img alt="_images/optimization.gif" src="_images/optimization.gif" style="width: 600px;" /></a>
+<p>So the question is: how do we know which way to “bump” our guess for the parameters to make the loss a tiny bit smaller?</p>
+<p>What we really need to know is, “if we increase a parameter (for example, the skeleton’s elbow angle) a tiny bit, how much does the loss (i.e. the distance between the skeleton’s wrist and the target point) change?”
+If the answer is that the loss goes down (i.e. the wrist gets closer to the target), which is what we want, we can increase the parameter a tiny bit (i.e. flex the elbow a tiny bit more).
+If the answer is that the loss goes <em>up</em> (i.e. the wrist gets further away from the target), which is <em>not</em> what we want, we can decrease the parameter a tiny bit (i.e. straighten the elbow a tiny bit),
+since presumably that will have the opposite effect as increasing the parameter a tiny bit (this is an important assumption in all of gradient-based optimization, which is the “smoothness” of your function).</p>
+<p>It is pretty straightforward to approximately compute the derivative of the loss with respect to the parameters using the “brute force” method, by literally trying out a bunch of different values for the parameters and seeing how the loss changes. However, this is very slow, and we can do better.</p>
+<p>What we want is to use calculus and fast C++ code to quickly find the way we can change each of the parameters all at once to make the loss go down as much as possible.
+This “how to change every parameter to improve as fast as possible” vector is called the “gradient” of the loss with respect to the parameters.
+The gradient is a vector, and it has one entry for each parameter. Each entry tells us how to change that parameter to make the loss go down as much as possible.</p>
+<p>Here is some example code to do this optimization, which was used to generate the GIF above:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="n">right_wrist</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Joint</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;radius_hand_r&quot;</span><span class="p">)</span>
+
+<span class="c1"># Set an arbitrary target location</span>
+<span class="n">target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+
+<span class="c1"># Create a GUI and serve on port 8080</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span><span class="p">()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+
+<span class="c1"># Get an initial guess for positions</span>
+<span class="n">positions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getPositions</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+  <span class="c1"># Render the skeleton to the GUI</span>
+  <span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">renderSkeleton</span><span class="p">(</span><span class="n">skeleton</span><span class="p">)</span>
+
+  <span class="c1"># Get the world location of the wrist</span>
+  <span class="n">wrist_pos</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPositions</span><span class="p">([</span><span class="n">right_wrist</span><span class="p">])</span>
+
+  <span class="c1"># Draw a red line connecting the wrist to the target</span>
+  <span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">createLine</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;wrist_error&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">wrist_pos</span><span class="p">,</span> <span class="n">target</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+
+  <span class="c1"># Compute the loss</span>
+  <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">wrist_pos</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loss[&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;]: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loss</span><span class="p">))</span>
+
+  <span class="c1"># Get gradient - we will discuss this more in following sections</span>
+  <span class="n">d_loss_d_wrist_pos</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">wrist_pos</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span>
+  <span class="n">d_wrist_pos_d_joint_angles</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPositionsJacobianWrtJointPositions</span><span class="p">([</span><span class="n">right_wrist</span><span class="p">])</span>
+  <span class="n">d_loss_d_joint_angles</span> <span class="o">=</span> <span class="n">d_wrist_pos_d_joint_angles</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">d_loss_d_wrist_pos</span>
+
+  <span class="c1"># Do not update the pelvis position in the world</span>
+  <span class="n">d_loss_d_joint_angles</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+  <span class="c1"># Update the positions</span>
+  <span class="n">positions</span> <span class="o">-=</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">d_loss_d_joint_angles</span>
+  <span class="n">skeleton</span><span class="o">.</span><span class="n">setPositions</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+
+  <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+<span class="c1"># Block until the GUI is closed</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">blockWhileServing</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This code is mostly stuff you have seen before, except for the gradient computation, which we will discuss in the following sections.</p>
+</section>
+<section id="computing-gradients-often-with-jacobians">
+<h2>Computing Gradients (often with Jacobians):<a class="headerlink" href="#computing-gradients-often-with-jacobians" title="Permalink to this heading"></a></h2>
+<p>Generally, there will be a few intermediate quantities that you need to compute in order to compute the loss from your parameters.</p>
+<p><em>TODO: section under construction</em></p>
+</section>
+<section id="how-to-get-access-to-the-derivatives">
+<h2>How to get access to the derivatives:<a class="headerlink" href="#how-to-get-access-to-the-derivatives" title="Permalink to this heading"></a></h2>
+<p>For some “old school” control algorithms like <a class="reference external" href="https://inst.eecs.berkeley.edu/~cs294-40/fa08/scribes/lecture7.pdf">Differential Dynamic Programming (DDP)</a>, you need access to the Jacobians of dynamics.</p>
+<p>If we say the state at time <span class="math notranslate nohighlight">\(t\)</span> is <span class="math notranslate nohighlight">\(s_t\)</span>, and the action is <span class="math notranslate nohighlight">\(a_t\)</span>, then our timestep can be thought of as:</p>
+<p><span class="math notranslate nohighlight">\(s_{t+1} = f(s_t, a_t)\)</span></p>
+<p>We’d like to be able to access the Jacobians:</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial s_{t+1}}{\partial s_t}\)</span> - which we’ll call the “state Jacobian” (<code class="code docutils literal notranslate"><span class="pre">stateJac</span></code> below)</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial s_{t+1}}{\partial a_t}\)</span> - which we’ll call the “action Jacobian” (<code class="code docutils literal notranslate"><span class="pre">actionJac</span></code> below)</p>
+<p>Getting these quantities out of Nimble is easy! Simply call:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stateJac</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">getStateJacobian</span><span class="p">()</span>
+<span class="n">actionJac</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">getActionJacobian</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That’ll return numpy arrays (<cite>not</cite> PyTorch tensors, computing these Jacobians is not itself differentiable) of the requested Jacobians.</p>
+<p>These Jacobians will change as you change either the state or the action, so remember to recompute!</p>
+<p><strong>Performance note</strong>: internally, a call to either <code class="code docutils literal notranslate"><span class="pre">world.getStateJacobian()</span></code> or <code class="code docutils literal notranslate"><span class="pre">world.getActionJacobian()</span></code> must run a timestep and cache the result.
+This means that if you call both without changing either your state or your action, the second Jacobian requested is (almost) free.
+Be aware though that the first time you call either <code class="code docutils literal notranslate"><span class="pre">world.getStateJacobian()</span></code> or <code class="code docutils literal notranslate"><span class="pre">world.getActionJacobian()</span></code> in a given state and action, that’ll cost about the same as a call to <code class="code docutils literal notranslate"><span class="pre">nimble.timestep(...)</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="understanding-skeletons.html" class="btn btn-neutral float-left" title="Understand Skeletons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="posing-skeletons.html" class="btn btn-neutral float-right" title="Posing Skeletons to Match Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
