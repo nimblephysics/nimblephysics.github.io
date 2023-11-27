@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; Nimble Physics 0.4.0 documentation</title>
+  <title>Using the Nimble GUI &mdash; Nimble Physics 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="canonical" href="https://nimblephysics.org/install.html" />
+    <link rel="canonical" href="https://nimblephysics.org/gui-tutorial.html" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -22,8 +22,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Understand Skeletons" href="understanding-skeletons.html" />
-    <link rel="prev" title="What is Nimble?" href="intro.html" /> 
+    <link rel="prev" title="Processing Mocap Data" href="process-mocap-data.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,17 +44,14 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#common-errors-and-how-to-fix-them">Common Errors (and how to fix them)</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
 <li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using the Nimble GUI</a></li>
 </ul>
 
         </div>
@@ -72,9 +68,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Installation</li>
+      <li class="breadcrumb-item active">Using the Nimble GUI</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/gui-tutorial.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -82,29 +78,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
-<p>On Linux or Mac OS X, running Python 3.5, 3.6, 3.7, or 3.8 and with <code class="code docutils literal notranslate"><span class="pre">pip</span></code> installed, you can run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">nimblephysics</span>
-</pre></div>
-</div>
-<p>We do not currently support Windows. Windows users are recommended to use the <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Windows Subsystem for Linux</a>.</p>
-<section id="common-errors-and-how-to-fix-them">
-<h2>Common Errors (and how to fix them)<a class="headerlink" href="#common-errors-and-how-to-fix-them" title="Permalink to this heading"></a></h2>
-<p>If your version of <code class="code docutils literal notranslate"><span class="pre">pip</span></code> is older than <code class="code docutils literal notranslate"><span class="pre">19.3</span></code>, you will run into <strong>ERROR: No matching distribution found for nimblephysics</strong>. There’s an easy fix, which is to upgrade <code class="code docutils literal notranslate"><span class="pre">pip</span></code> and try again:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">pip</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">nimblephysics</span>
-</pre></div>
-</div>
-</section>
+  <section id="using-the-nimble-gui">
+<h1>Using the Nimble GUI<a class="headerlink" href="#using-the-nimble-gui" title="Permalink to this heading"></a></h1>
+<p><em>This documentation is WIP</em>:</p>
+<p>Nimble has a powerful and simple web GUI built in.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="intro.html" class="btn btn-neutral float-left" title="What is Nimble?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="understanding-skeletons.html" class="btn btn-neutral float-right" title="Understand Skeletons" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="process-mocap-data.html" class="btn btn-neutral float-left" title="Processing Mocap Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

@@ -41,17 +41,15 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="understanding-worlds.html">Understand Worlds and Skeletons</a></li>
-<li class="toctree-l1"><a class="reference internal" href="backprop-through-physics.html">Backprop through Physics Timesteps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="working-in-world-space.html">Specify Loss in World Space</a></li>
-<li class="toctree-l1"><a class="reference internal" href="human-body.html">Differentiable Human Body Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Inverse Dynamics (with Contact)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
 </ul>
 
         </div>
@@ -84,6 +82,7 @@
  <a href="#A"><strong>A</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
@@ -94,14 +93,13 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
- | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.acc">acc (nimblephysics.biomechanics.Frame property)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.accObservations">accObservations (nimblephysics.biomechanics.Frame property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -137,7 +135,19 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.debugTrajectoryAndMarkersToGUI">debugTrajectoryAndMarkersToGUI() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.dt">dt (nimblephysics.biomechanics.Frame property)</a>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkersErrorReport.droppedMarkerWarnings">droppedMarkerWarnings (nimblephysics.biomechanics.MarkersErrorReport property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.emgSignals">emgSignals (nimblephysics.biomechanics.Frame property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.exoTorques">exoTorques (nimblephysics.biomechanics.Frame property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -146,6 +156,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.findJointCenters">findJointCenters() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.fineTuneWithIMU">fineTuneWithIMU() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -165,41 +177,109 @@
         <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFixer.generateDataErrorsReport">(nimblephysics.biomechanics.MarkerFixer static method)</a>
 </li>
       </ul></li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getContactBodies">getContactBodies() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getAgeYears">getAgeYears() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getBiologicalSex">getBiologicalSex() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getCustomValueDim">getCustomValueDim() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getCustomValues">getCustomValues() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getDofAccelerationsFiniteDifferenced">getDofAccelerationsFiniteDifferenced() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getDofPositionsObserved">getDofPositionsObserved() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getDofVelocitiesFiniteDifferenced">getDofVelocitiesFiniteDifferenced() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getForcePlateCorners">getForcePlateCorners() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getForceplateCutoffs">getForceplateCutoffs() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getGroundForceBodies">getGroundForceBodies() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getHeaderProto">getHeaderProto() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getHeightM">getHeightM() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getHref">getHref() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.getIMUFineTuneProblem">getIMUFineTuneProblem() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.getImuList">getImuList() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.getImuMap">getImuMap() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.getImuNames">getImuNames() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.getInitialization">getInitialization() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getLowpassCutoffFrequency">getLowpassCutoffFrequency() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getLowpassFilterOrder">getLowpassFilterOrder() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.getMarkerIsTracking">getMarkerIsTracking() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getNotes">getNotes() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.getMarkerLossGradientWrtJoints">getMarkerLossGradientWrtJoints() (nimblephysics.biomechanics.MarkerFitter static method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkersErrorReport.getMarkerMapOnTimestep">getMarkerMapOnTimestep() (nimblephysics.biomechanics.MarkersErrorReport method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkersErrorReport.getMarkerNamesOnTimestep">getMarkerNamesOnTimestep() (nimblephysics.biomechanics.MarkersErrorReport method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkersErrorReport.getMarkerPositionOnTimestep">getMarkerPositionOnTimestep() (nimblephysics.biomechanics.MarkersErrorReport method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getMassKg">getMassKg() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getMissingGRF">getMissingGRF() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getNotes">getNotes() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getNumDofs">getNumDofs() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getNumForcePlates">getNumForcePlates() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getNumJoints">getNumJoints() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.getNumMarkers">getNumMarkers() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getNumProcessingPasses">getNumProcessingPasses() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkersErrorReport.getNumTimesteps">getNumTimesteps() (nimblephysics.biomechanics.MarkersErrorReport method)</a>
+</li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getNumTrials">getNumTrials() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getProbablyMissingGRF">getProbablyMissingGRF() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getOpensimFileText">getOpensimFileText() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getProcessingPassType">getProcessingPassType() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getSubjectTags">getSubjectTags() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialAngularResidualNorms">getTrialAngularResidualNorms() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialLength">getTrialLength() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialLinearResidualNorms">getTrialLinearResidualNorms() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialMarkerMaxs">getTrialMarkerMaxs() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialMarkerRMSs">getTrialMarkerRMSs() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialMaxJointVelocity">getTrialMaxJointVelocity() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialName">getTrialName() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.groundContactCenterOfPressure">groundContactCenterOfPressure (nimblephysics.biomechanics.Frame property)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialNumProcessingPasses">getTrialNumProcessingPasses() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.groundContactForce">groundContactForce (nimblephysics.biomechanics.Frame property)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialOriginalName">getTrialOriginalName() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.groundContactTorque">groundContactTorque (nimblephysics.biomechanics.Frame property)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialSplitIndex">getTrialSplitIndex() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.groundContactWrenches">groundContactWrenches (nimblephysics.biomechanics.Frame property)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialTags">getTrialTags() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.getTrialTimestep">getTrialTimestep() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.gyroObservations">gyroObservations (nimblephysics.biomechanics.Frame property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -215,6 +295,10 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.loadAllFrames">loadAllFrames() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.C3DLoader.loadC3D">loadC3D() (nimblephysics.biomechanics.C3DLoader static method)</a>
 </li>
   </ul></td>
@@ -227,11 +311,21 @@
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFixer">MarkerFixer (class in nimblephysics.biomechanics)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.markerObservations">markerObservations (nimblephysics.biomechanics.Frame property)</a>
+</li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkersErrorReport.markerObservationsAttemptedFixed">markerObservationsAttemptedFixed (nimblephysics.biomechanics.MarkersErrorReport property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkersErrorReport">MarkersErrorReport (class in nimblephysics.biomechanics)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkersErrorReport.markersRenamedFromTo">markersRenamedFromTo (nimblephysics.biomechanics.MarkersErrorReport property)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.measureAccelerometerRMS">measureAccelerometerRMS() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.measureGyroRMS">measureGyroRMS() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.missingGRFReason">missingGRFReason (nimblephysics.biomechanics.Frame property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -255,9 +349,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.pos">pos (nimblephysics.biomechanics.Frame property)</a>
-</li>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.probablyMissingGRF">probablyMissingGRF (nimblephysics.biomechanics.Frame property)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.processingPasses">processingPasses (nimblephysics.biomechanics.Frame property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -265,14 +357,24 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.rawForcePlateCenterOfPressures">rawForcePlateCenterOfPressures (nimblephysics.biomechanics.Frame property)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.rawForcePlateForces">rawForcePlateForces (nimblephysics.biomechanics.Frame property)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.rawForcePlateTorques">rawForcePlateTorques (nimblephysics.biomechanics.Frame property)</a>
+</li>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.readForcePlates">readForcePlates() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
+</li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.readFrames">readFrames() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.readSkel">readSkel() (nimblephysics.biomechanics.SubjectOnDisk method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.removeZeroConstraint">removeZeroConstraint() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.rotateIMUs">rotateIMUs() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.runKinematicsPipeline">runKinematicsPipeline() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.runMultiTrialKinematicsPipeline">runMultiTrialKinematicsPipeline() (nimblephysics.biomechanics.MarkerFitter method)</a>
@@ -297,7 +399,11 @@
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setDebugLoss">setDebugLoss() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setExplicitHeightPrior">setExplicitHeightPrior() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setIgnoreJointLimits">setIgnoreJointLimits() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setImuMap">setImuMap() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setInitialIKMaxRestarts">setInitialIKMaxRestarts() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
@@ -305,14 +411,22 @@
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setIterationLimit">setIterationLimit() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setJointAxisFitSGDIterations">setJointAxisFitSGDIterations() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setJointForceFieldSoftness">setJointForceFieldSoftness() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setJointForceFieldThresholdDistance">setJointForceFieldThresholdDistance() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setJointSphereFitSGDIterations">setJointSphereFitSGDIterations() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setMarkerIsTracking">setMarkerIsTracking() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setMaxAxisWeight">setMaxAxisWeight() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setMaxJointWeight">setMaxJointWeight() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setMaxMarkerOffset">setMaxMarkerOffset() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setMinAxisFitScore">setMinAxisFitScore() (nimblephysics.biomechanics.MarkerFitter method)</a>
@@ -321,13 +435,29 @@
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setMinSphereFitScore">setMinSphereFitScore() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setParallelIKWarps">setParallelIKWarps() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setPostprocessAnatomicalMarkerOffsets">setPostprocessAnatomicalMarkerOffsets() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setPostprocessTrackingMarkerOffsets">setPostprocessTrackingMarkerOffsets() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setRegularizeAllBodyScales">setRegularizeAllBodyScales() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setRegularizeAnatomicalMarkerOffsets">setRegularizeAnatomicalMarkerOffsets() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setRegularizeIndividualBodyScales">setRegularizeIndividualBodyScales() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setRegularizeJointBounds">setRegularizeJointBounds() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setRegularizeJointWithVirtualSpring">setRegularizeJointWithVirtualSpring() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setRegularizePelvisJointsWithVirtualSpring">setRegularizePelvisJointsWithVirtualSpring() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setRegularizeTrackingMarkerOffsets">setRegularizeTrackingMarkerOffsets() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setStaticTrial">setStaticTrial() (nimblephysics.biomechanics.MarkerFitter method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setStaticTrialWeight">setStaticTrialWeight() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
       <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.setTrackingMarkerDefaultWeight">setTrackingMarkerDefaultWeight() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
@@ -347,17 +477,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.tau">tau (nimblephysics.biomechanics.Frame property)</a>
-</li>
       <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.trial">trial (nimblephysics.biomechanics.Frame property)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="V">V</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame.vel">vel (nimblephysics.biomechanics.Frame property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -369,7 +489,9 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.writeSubject">writeSubject() (nimblephysics.biomechanics.SubjectOnDisk static method)</a>
+      <li><a href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk.writeB3D">writeB3D() (nimblephysics.biomechanics.SubjectOnDisk static method)</a>
+</li>
+      <li><a href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter.writeCSVData">writeCSVData() (nimblephysics.biomechanics.MarkerFitter method)</a>
 </li>
   </ul></td>
 </tr></table>

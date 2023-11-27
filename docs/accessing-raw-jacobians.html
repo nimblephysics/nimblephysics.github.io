@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Accessing Jacobians of Dynamics &mdash; Nimble Physics 0.4.0 documentation</title>
+  <title>Accessing Derivatives and Jacobians &mdash; Nimble Physics 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Working with AddBiomechanics Data" href="working-with-addbiomechanics-data.html" />
-    <link rel="prev" title="System Identification" href="system-identification.html" /> 
+    <link rel="next" title="Posing Skeletons to Match Data" href="optimizing-skeletons.html" />
+    <link rel="prev" title="Understand Skeletons" href="understanding-skeletons.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,17 +45,15 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="understanding-worlds.html">Understand Worlds and Skeletons</a></li>
-<li class="toctree-l1"><a class="reference internal" href="backprop-through-physics.html">Backprop through Physics Timesteps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="working-in-world-space.html">Specify Loss in World Space</a></li>
-<li class="toctree-l1"><a class="reference internal" href="human-body.html">Differentiable Human Body Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Inverse Dynamics (with Contact)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Accessing Jacobians of Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Accessing Derivatives and Jacobians</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
 </ul>
 
         </div>
@@ -72,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Accessing Jacobians of Dynamics</li>
+      <li class="breadcrumb-item active">Accessing Derivatives and Jacobians</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/accessing-raw-jacobians.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -82,8 +80,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="accessing-jacobians-of-dynamics">
-<h1>Accessing Jacobians of Dynamics<a class="headerlink" href="#accessing-jacobians-of-dynamics" title="Permalink to this heading"></a></h1>
+  <section id="accessing-derivatives-and-jacobians">
+<h1>Accessing Derivatives and Jacobians<a class="headerlink" href="#accessing-derivatives-and-jacobians" title="Permalink to this heading"></a></h1>
+<p>In order to do gradient-based optimization, you need access to derivatives of the quantities you are optimizing.</p>
 <p>For some “old school” control algorithms like <a class="reference external" href="https://inst.eecs.berkeley.edu/~cs294-40/fa08/scribes/lecture7.pdf">Differential Dynamic Programming (DDP)</a>, you need access to the Jacobians of dynamics.</p>
 <p>If we say the state at time <span class="math notranslate nohighlight">\(t\)</span> is <span class="math notranslate nohighlight">\(s_t\)</span>, and the action is <span class="math notranslate nohighlight">\(a_t\)</span>, then our timestep can be thought of as:</p>
 <p><span class="math notranslate nohighlight">\(s_{t+1} = f(s_t, a_t)\)</span></p>
@@ -106,8 +105,8 @@ Be aware though that the first time you call either <code class="code docutils l
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="system-identification.html" class="btn btn-neutral float-left" title="System Identification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="working-with-addbiomechanics-data.html" class="btn btn-neutral float-right" title="Working with AddBiomechanics Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="understanding-skeletons.html" class="btn btn-neutral float-left" title="Understand Skeletons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="optimizing-skeletons.html" class="btn btn-neutral float-right" title="Posing Skeletons to Match Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

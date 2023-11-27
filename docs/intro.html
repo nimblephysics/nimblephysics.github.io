@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What is Nimble? &mdash; Nimble Physics 0.4.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://nimblephysics.org/intro.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="install.html" />
+    <link rel="prev" title="Welcome to Nimble’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html">
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What is Nimble?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#does-nimble-do-general-purpose-robotics-simulation">Does Nimble do general purpose robotics simulation?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nimble Physics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">What is Nimble?</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="what-is-nimble">
+<h1>What is Nimble?<a class="headerlink" href="#what-is-nimble" title="Permalink to this heading"></a></h1>
+<p>Nimble is a <em>toolkit for doing AI on human biomechanics</em> (physically simulated realistic human bodies), written in C++ for speed, but with nice Python bindings. It focuses on studying real physical human bodies.</p>
+<p>Nimble started life as a general purpose differentiable physics engine, as a fork of the (not differentiable) <a class="reference external" href="https://dartsim.github.io/">DART physics engine</a>.
+We wrote a paper about it, which you can find <a class="reference external" href="https://arxiv.org/pdf/2103.16021.pdf">here</a>.
+Over the years, to support projects like <a class="reference external" href="https://addbiomechanics.org/">AddBiomechanics</a>, we’ve added a lot of biomechanics-focused functionality to Nimble, including:</p>
+<ul class="simple">
+<li><p>New types of biological joints (<code class="code docutils literal notranslate"><span class="pre">CustomJoint</span></code> for knees, <code class="code docutils literal notranslate"><span class="pre">ConstantCurvatureJoint</span></code> for spines, <code class="code docutils literal notranslate"><span class="pre">EllipsoidJoint</span></code> for shoulders, etc), which are all differentiable</p></li>
+<li><p>Support for loading, modifying, and saving OpenSim skeleton models</p></li>
+<li><p>Support for handling raw motion capture data</p></li>
+<li><p>Treating bone scales and optical marker offsets as first class differentiable quantities, even through physics, which is important when system-identifying a human body</p></li>
+<li><p>Various optimization algorithms useful for biomechanics</p></li>
+<li><p>Optimized computations to get Jacobians and gradients through most quantities of interest in the human body</p></li>
+<li><p>… a bunch of other features too numerous to list here</p></li>
+</ul>
+<section id="does-nimble-do-general-purpose-robotics-simulation">
+<h2>Does Nimble do general purpose robotics simulation?<a class="headerlink" href="#does-nimble-do-general-purpose-robotics-simulation" title="Permalink to this heading"></a></h2>
+<p>This documentation is focused on the tools you need when doing AI for human biomechanics.
+While Nimble is also a general purpose differentiable physics engine capable of simulating complex scenes
+with robots and collisions, we don’t cover that much here, because the past few years of research with differentiable physics engines have shown that
+the way Nimble gets gradients through rigid collisions is <a class="reference external" href="https://arxiv.org/abs/2109.05143">probably not the best way for complex trajectory optimization</a> (TLDR: RL is onto something, and it has advantages even if the system is technically differentiable).
+If you are doing general purpose robotics research, we recommend looking at some of the following engines:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.mujoco.org/">MuJoCo</a></p></li>
+<li><p><a class="reference external" href="https://github.com/google/brax">Brax</a></p></li>
+<li><p><a class="reference external" href="https://drake.mit.edu/">Drake</a></p></li>
+<li><p><a class="reference external" href="https://dartsim.github.io/">DART</a></p></li>
+<li><p><a class="reference external" href="https://github.com/erwincoumans/tiny-differentiable-simulator">TDS</a></p></li>
+<li><p><a class="reference external" href="https://pybullet.org/wordpress/">PyBullet</a></p></li>
+</ul>
+<p>If you are here because you are interested in studying physical human bodies with AI, then read on!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Nimble’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

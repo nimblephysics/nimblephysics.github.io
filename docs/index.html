@@ -22,7 +22,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="install.html" /> 
+    <link rel="next" title="What is Nimble?" href="intro.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,17 +43,15 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="understanding-worlds.html">Understand Worlds and Skeletons</a></li>
-<li class="toctree-l1"><a class="reference internal" href="backprop-through-physics.html">Backprop through Physics Timesteps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="working-in-world-space.html">Specify Loss in World Space</a></li>
-<li class="toctree-l1"><a class="reference internal" href="human-body.html">Differentiable Human Body Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Inverse Dynamics (with Contact)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
 </ul>
 
         </div>
@@ -83,50 +81,45 @@
   <section id="welcome-to-nimble-s-documentation">
 <h1>Welcome to Nimble’s documentation!<a class="headerlink" href="#welcome-to-nimble-s-documentation" title="Permalink to this heading"></a></h1>
 <p><em>IMPORTANT NOTE:</em> Nimble is currently in beta. We reserve the right to make backwards incompatible changes to the APIs until Nimble reaches <code class="code docutils literal notranslate"><span class="pre">v1.0</span></code>.
-This documentation was written for Nimble <code class="code docutils literal notranslate"><span class="pre">v0.5.3</span></code>, and may or may not work on later versions.</p>
+This documentation was written for Nimble <code class="code docutils literal notranslate"><span class="pre">v0.10.28</span></code>, and may or may not work on later versions.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#does-nimble-do-general-purpose-robotics-simulation">Does Nimble do general purpose robotics simulation?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#common-errors-and-how-to-fix-them">Common Errors (and how to fix them)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="understanding-worlds.html">Understand Worlds and Skeletons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="understanding-worlds.html#generalized-coordinates-position-and-velocity">Generalized Coordinates: Position and Velocity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding-worlds.html#types-of-joints">Types of Joints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding-worlds.html#skeletons-and-the-origin">Skeletons and the Origin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding-worlds.html#putting-it-together-the-world">Putting it Together: The World</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding-worlds.html#control-forces-and-the-action-space">Control Forces and the Action Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#built-in-human-body-model">Built-in human body model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#loading-custom-opensim-models">Loading custom OpenSim models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#visualizing-your-skeleton">Visualizing your Skeleton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#generalized-coordinates">Generalized Coordinates:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#types-of-joints">Types of Joints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#skeletons-and-the-origin">Skeletons and the Origin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#listing-and-accessing-bodynodes">Listing and Accessing BodyNodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#transforming-between-the-world-frame-and-a-bodynode-frame">Transforming between the World frame and a BodyNode frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#bodynode-scaling-and-physical-properties">BodyNode scaling and physical properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#listing-and-accessing-joints">Listing and Accessing Joints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-skeletons.html#joint-world-locations">Joint World Locations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="backprop-through-physics.html">Backprop through Physics Timesteps</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="backprop-through-physics.html#setting-up-the-optimization-problem">Setting up the optimization problem</a></li>
-<li class="toctree-l2"><a class="reference internal" href="backprop-through-physics.html#doing-the-actual-optimization">Doing the actual optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="backprop-through-physics.html#complete-code">Complete Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="optimizing-skeletons.html#fitting-joint-centers">Fitting Joint Centers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimizing-skeletons.html#working-with-marker-data">Working with Marker Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimizing-skeletons.html#converting-motion-between-skeleton-types">Converting Motion Between Skeleton Types</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="working-in-world-space.html">Specify Loss in World Space</a></li>
-<li class="toctree-l1"><a class="reference internal" href="human-body.html">Differentiable Human Body Models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="human-body.html#biomechanics-quality-human-body-model">Biomechanics-quality human body model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="human-body.html#converting-motion-between-skeleton-types">Converting motion between skeleton types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="human-body.html#doing-real-time-ik-ex-working-with-azure-kinect-sensors">Doing real-time IK (ex. working with Azure Kinect sensors)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="human-body.html#working-with-marker-data">Working with marker data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="human-body.html#reconstructing-joint-forces-from-motion">Reconstructing joint forces from motion</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Inverse Dynamics (with Contact)</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="inverse-dynamics.html#plain-vanilla-inverse-dynamics">“Plain Vanilla” Inverse Dynamics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inverse-dynamics.html#inverse-dynamics-with-one-contact">Inverse Dynamics with One Contact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inverse-dynamics.html#inverse-dynamics-with-multiple-contacts">Inverse Dynamics with Multiple Contacts</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="system-identification.html#tuning-mass">Tuning mass</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system-identification.html#automatically-initializing-inertia">Automatically Initializing Inertia</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.SubjectOnDisk"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="working-with-addbiomechanics-data.html#nimblephysics.biomechanics.Frame"><code class="docutils literal notranslate"><span class="pre">Frame</span></code></a></li>
@@ -140,6 +133,7 @@ This documentation was written for Nimble <code class="code docutils literal not
 <li class="toctree-l2"><a class="reference internal" href="process-mocap-data.html#nimblephysics.biomechanics.MarkerFitter"><code class="docutils literal notranslate"><span class="pre">MarkerFitter</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
 </ul>
 </div>
 </section>
@@ -148,7 +142,7 @@ This documentation was written for Nimble <code class="code docutils literal not
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="intro.html" class="btn btn-neutral float-right" title="What is Nimble?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

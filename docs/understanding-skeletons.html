@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Understand Skeletons &mdash; Nimble Physics 0.4.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://nimblephysics.org/understanding-skeletons.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Accessing Derivatives and Jacobians" href="accessing-raw-jacobians.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html">
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Understand Skeletons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#built-in-human-body-model">Built-in human body model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-custom-opensim-models">Loading custom OpenSim models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-your-skeleton">Visualizing your Skeleton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generalized-coordinates">Generalized Coordinates:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#types-of-joints">Types of Joints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#skeletons-and-the-origin">Skeletons and the Origin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listing-and-accessing-bodynodes">Listing and Accessing BodyNodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transforming-between-the-world-frame-and-a-bodynode-frame">Transforming between the World frame and a BodyNode frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bodynode-scaling-and-physical-properties">BodyNode scaling and physical properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listing-and-accessing-joints">Listing and Accessing Joints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#joint-world-locations">Joint World Locations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nimble Physics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Understand Skeletons</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/understanding-skeletons.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="understand-skeletons">
+<span id="skeletons"></span><h1>Understand Skeletons<a class="headerlink" href="#understand-skeletons" title="Permalink to this heading"></a></h1>
+<p>Nimble operates primarily on <code class="code docutils literal notranslate"><span class="pre">nimble.dynamics.Skeleton</span></code> objects. Each Skeleton is composed of a set of <code class="code docutils literal notranslate"><span class="pre">nimble.dynamics.Joint</span></code>’s, attaching together <code class="code docutils literal notranslate"><span class="pre">nimble.dynamics.BodyNode</span></code>’s.
+We will start with how to load a skeleton, then discuss how to set its state, and then discuss accessing its pieces (joints and bodies).</p>
+<section id="built-in-human-body-model">
+<h2>Built-in human body model<a class="headerlink" href="#built-in-human-body-model" title="Permalink to this heading"></a></h2>
+<p>There are many different skeletons used to represent human bodies.
+Many skeleton formats are designed to be “good enough” for graphics applications.
+For applications where physical accuracy is desired, we turn to the biomechanics literature.
+The gold-standard human model in biomechanics is the <a class="reference external" href="https://simtk.org/projects/full_body/">Rajagopal 2015 Model</a>, which we can load from its OpenSim file.
+This model comes bundled with Nimble, and is fully differentiable! You can create it with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a Rajagopal skeleton</span>
+<span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+</pre></div>
+</div>
+<p>That will create a skeleton model. In the figure below, we show that skeleton model walking up some stairs:</p>
+<a class="reference internal image-reference" href="_images/Falisse_Stair_Up.gif"><img alt="_images/Falisse_Stair_Up.gif" src="_images/Falisse_Stair_Up.gif" style="width: 600px;" /></a>
+</section>
+<section id="loading-custom-opensim-models">
+<h2>Loading custom OpenSim models<a class="headerlink" href="#loading-custom-opensim-models" title="Permalink to this heading"></a></h2>
+<p>To load a model from an OpenSim file, you can use the <code class="code docutils literal notranslate"><span class="pre">nimble.biomechanics.OpenSimParser</span></code> class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Load the model</span>
+<span class="n">custom_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimParser</span><span class="o">.</span><span class="n">parseOsim</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;./path/to/your/custom_model.osim&quot;</span><span class="p">))</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">custom_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+</pre></div>
+</div>
+</section>
+<section id="visualizing-your-skeleton">
+<h2>Visualizing your Skeleton<a class="headerlink" href="#visualizing-your-skeleton" title="Permalink to this heading"></a></h2>
+<p>Nimble comes with a built-in GUI that you can use to visualize your work. You can use it like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+
+<span class="c1"># Load the model</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+
+<span class="c1"># Create a GUI</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span><span class="p">()</span>
+
+<span class="c1"># Serve the GUI on port 8080</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+
+<span class="c1"># Render the skeleton to the GUI</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">renderSkeleton</span><span class="p">(</span><span class="n">skeleton</span><span class="p">)</span>
+
+<span class="c1"># Block until the GUI is closed</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">blockWhileServing</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When you run this code, you should see a link in your console to <a class="reference external" href="http://localhost:8080">http://localhost:8080</a>. If you visit that link, you should see an interactive 3D visualization of your skeleton.</p>
+</section>
+<section id="generalized-coordinates">
+<h2>Generalized Coordinates:<a class="headerlink" href="#generalized-coordinates" title="Permalink to this heading"></a></h2>
+<p>You can try running this code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="c1"># Load the model</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="c1"># Print the skeleton&#39;s position vector</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getPositions</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>When you run the file, you will see a numpy vector of length 37 printed to the console. Nimble works in <a class="reference external" href="https://en.wikipedia.org/wiki/Generalized_coordinates">generalized coordinates</a>, which means that each element of the position vector (which is sometimes called a “degree of freedom”) refers to a joint position.</p>
+<p>You can find the names of all the degrees of freedom with code like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getDofByIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">())])</span>
+</pre></div>
+</div>
+<p>For example, here are a few of the degrees of freedom in the Rajagopal model:</p>
+<a class="reference internal image-reference" href="_images/generalized_coords.png"><img alt="_images/generalized_coords.png" src="_images/generalized_coords.png" style="width: 600px;" /></a>
+<p>You can change the position of the knee by changing the values of the joints of the Skeleton and re-running the code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="c1"># Load the model</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="c1"># Print the skeleton&#39;s position vector</span>
+<span class="n">positions</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getPositions</span><span class="p">()</span>
+<span class="n">positions</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.14</span> <span class="o">/</span> <span class="mi">4</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setPositions</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+
+<span class="c1"># Create a GUI</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span><span class="p">()</span>
+
+<span class="c1"># Serve the GUI on port 8080</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+
+<span class="c1"># Render the skeleton to the GUI</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">renderSkeleton</span><span class="p">(</span><span class="n">skeleton</span><span class="p">)</span>
+
+<span class="c1"># Block until the GUI is closed</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">blockWhileServing</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will cause the left knee (index 16 in the vector) to rotate backwards by 45 degrees (in radians is PI/4), like in the following figure:</p>
+<a class="reference internal image-reference" href="_images/generalized_coords_2.png"><img alt="_images/generalized_coords_2.png" src="_images/generalized_coords_2.png" style="width: 400px;" /></a>
+<p>We also express velocity in the same <cite>generalized coordinates</cite> space. For example, if you want the left knee joint to be rotating backwards at 1 radian per second, you can set the velocity of the <code class="code docutils literal notranslate"><span class="pre">skeleton</span></code> to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">velocities</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getVelocities</span><span class="p">()</span>
+<span class="n">velocities</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setVelocities</span><span class="p">(</span><span class="n">velocities</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Likewise with acceleration. If we want to decelerate the left knee joint at 1 radian per second squared, we can set the acceleration of the <code class="code docutils literal notranslate"><span class="pre">skeleton</span></code> to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">acceleration</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getAccelerations</span><span class="p">()</span>
+<span class="n">acceleration</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setVelocities</span><span class="p">(</span><span class="n">acceleration</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="types-of-joints">
+<h2>Types of Joints<a class="headerlink" href="#types-of-joints" title="Permalink to this heading"></a></h2>
+<p>Nimble comes with built-in support for many different Joint types. Here are a few common ones:</p>
+<a class="reference internal image-reference" href="_images/joints.png"><img alt="_images/joints.png" src="_images/joints.png" style="width: 700px;" /></a>
+<ul class="simple">
+<li><p><strong>RevoluteJoint</strong>: This is a joint that takes up a single slot in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code> (i.e. it has a single degree-of-freedom), that rotates along an axis. The KR5 robot from the previous section uses only <code class="code docutils literal notranslate"><span class="pre">RevoluteJoint</span></code>’s.</p></li>
+<li><p><strong>PrismaticJoint</strong>: This is a joint with a single degree-of-freedom, that translates along an axis.</p></li>
+<li><p><strong>TranslationalJoint2D</strong>: This allows a child to translate in two dimensions relative to its parent. It takes up two slots in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code>, since it needs to express both X and Y translation.</p></li>
+<li><p><strong>TranslationalJoint</strong>: This allows a child to translate in all three dimensions relative to its parent. It takes up three slots in its <code class="code docutils literal notranslate"><span class="pre">Skeleton.getPositions()</span></code>, since it needs to express X, Y and Z translation.</p></li>
+<li><p><strong>EulerJoint</strong>: This allows a child to rotate freely in 3 dimensions relative to its parent. It is a sequence of 3 <code class="code docutils literal notranslate"><span class="pre">RevoluteJoint</span></code>’s.</p></li>
+<li><p><strong>EulerFreeJoint</strong>: This is basically a <code class="code docutils literal notranslate"><span class="pre">TranslationalJoint</span></code> glued to a <code class="code docutils literal notranslate"><span class="pre">EulerJoint</span></code> for convenience. Its first 3 parameters refer to rotation, using <code class="code docutils literal notranslate"><span class="pre">EulerJoint</span></code> semantics, and its last 3 parameters refer to translation.</p></li>
+</ul>
+</section>
+<section id="skeletons-and-the-origin">
+<h2>Skeletons and the Origin<a class="headerlink" href="#skeletons-and-the-origin" title="Permalink to this heading"></a></h2>
+<p>Each Skeleton is tree of joints, whose root is <cite>always rigidly attached to the origin</cite>.</p>
+<p>This is a key point! <cite>Nothing</cite> in Nimble is “free floating”. We simulate things that are “free floating” by including a root joint in the Skeleton that lets the rest of the skeleton move relative to the world.</p>
+<p>As an example of something rigidly anchored to the origin, here’s an example of how joints connect body nodes together in a cartoon robot arm:</p>
+<a class="reference internal image-reference" href="_images/skeleton_hierarchy.svg"><img alt="_images/skeleton_hierarchy.svg" src="_images/skeleton_hierarchy.svg" width="400" /></a>
+<p>If you want a Skeleton that is free to move around in 3D space, the Skeleton needs to include a joint (or several joints) that allow translation and rotation between the origin and the base of the robot. Here’s an example of a box that’s free to move and rotate around in 3D space.</p>
+<a class="reference internal image-reference" href="_images/skeleton_hierarchy_free.svg"><img alt="_images/skeleton_hierarchy_free.svg" src="_images/skeleton_hierarchy_free.svg" width="400" /></a>
+<p>We’ll see how to construct these Skeletons manually using the Nimble API in future tutorials, but that’s enough detail for now.</p>
+</section>
+<section id="listing-and-accessing-bodynodes">
+<h2>Listing and Accessing BodyNodes<a class="headerlink" href="#listing-and-accessing-bodynodes" title="Permalink to this heading"></a></h2>
+<p>Skeletons are composed of a set of infinitely rigid bodies, usually representing individual bones (like the femur) or groups of bones (like a hand), which Nimble calles <code class="code docutils literal notranslate"><span class="pre">BodyNode</span></code>’s.
+It can be useful to access individual <code class="code docutils literal notranslate"><span class="pre">BodyNode</span></code> instances to get things like the location and rotation of the rigid body in the world, and then use that information to transform 3D points back and forth from body-space to world-space.</p>
+<p>To print the names of all the body nodes, you can run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="c1"># Load the model</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="c1"># Print the names of the body nodes that compose this skeleton</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getNumBodyNodes</span><span class="p">()):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getBodyNode</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">getName</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>To get a particular <code class="code docutils literal notranslate"><span class="pre">BodyNode</span></code>, you can get it either based on its index, or its name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">right_hand_body</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">BodyNode</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getBodyNode</span><span class="p">(</span><span class="s2">&quot;hand_r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="transforming-between-the-world-frame-and-a-bodynode-frame">
+<h2>Transforming between the World frame and a BodyNode frame<a class="headerlink" href="#transforming-between-the-world-frame-and-a-bodynode-frame" title="Permalink to this heading"></a></h2>
+<p>The main useful thing to access in a <code class="code docutils literal notranslate"><span class="pre">BodyNode</span></code> is its “world transform”, which is a <code class="code docutils literal notranslate"><span class="pre">nimble.math.Isometry3</span></code> (an object that contains both rotation and translation):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="c1"># Optional: set the body in a position with skeleton.setPositions()</span>
+<span class="n">right_hand_body</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">BodyNode</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getBodyNode</span><span class="p">(</span><span class="s2">&quot;hand_r&quot;</span><span class="p">)</span>
+<span class="n">right_hand_world_transform</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Isometry3</span> <span class="o">=</span> <span class="n">right_hand_body</span><span class="o">.</span><span class="n">getWorldTransform</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To work out where the point (3,2,1) in the right hand’s frame corresponds to in world space, we can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">test_right_hand_point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">world_point</span> <span class="o">=</span> <span class="n">right_hand_world_transform</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">test_right_hand_point</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">world_point</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And to figure out where the point (1,2,3) in world space maps to in the right hand’s frame, we can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">test_world_point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">right_hand_point</span> <span class="o">=</span> <span class="n">right_hand_world_transform</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">test_world_point</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">right_hand_point</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can also access the translation and rotation of a <code class="code docutils literal notranslate"><span class="pre">nimble.math.Isometry3</span></code> directly as Numpy arrays:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">right_hand_world_transform</span><span class="o">.</span><span class="n">translation</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">right_hand_world_transform</span><span class="o">.</span><span class="n">rotation</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>We will learn more about how the GUI works in a subsequent section, but to visualize a basis (3 vectors representing X, Y, and Z axis of a frame) for the right hand frame and another for the world, we can use the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="c1"># Optional: set the body in a position with skeleton.setPositions()</span>
+<span class="n">right_hand_body</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">BodyNode</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getBodyNode</span><span class="p">(</span><span class="s2">&quot;hand_r&quot;</span><span class="p">)</span>
+<span class="n">right_hand_world_transform</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Isometry3</span> <span class="o">=</span> <span class="n">right_hand_body</span><span class="o">.</span><span class="n">getWorldTransform</span><span class="p">()</span>
+
+<span class="c1"># Create a GUI</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">NimbleGUI</span><span class="p">()</span>
+
+<span class="c1"># Serve the GUI on port 8080</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+
+<span class="c1"># Render the skeleton to the GUI</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">renderSkeleton</span><span class="p">(</span><span class="n">skeleton</span><span class="p">)</span>
+
+<span class="c1"># Convert the right hand rotation matrix to euler angles</span>
+<span class="n">right_hand_pos</span> <span class="o">=</span> <span class="n">right_hand_world_transform</span><span class="o">.</span><span class="n">translation</span><span class="p">()</span>
+<span class="n">right_hand_euler</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">matrixToEulerXYZ</span><span class="p">(</span><span class="n">right_hand_world_transform</span><span class="o">.</span><span class="n">rotation</span><span class="p">())</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">renderBasis</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">right_hand_pos</span><span class="p">,</span> <span class="n">euler</span><span class="o">=</span><span class="n">right_hand_euler</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;hand&quot;</span><span class="p">)</span>
+
+<span class="c1"># Render the world basis (which is the default, when renderBasis has no arguments)</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">renderBasis</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+
+<span class="c1"># Block until the GUI is closed</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">blockWhileServing</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That will render the following image (we have added annotations for clarity):</p>
+<a class="reference internal image-reference" href="_images/body_node_transforms.png"><img alt="_images/body_node_transforms.png" src="_images/body_node_transforms.png" style="width: 400px;" /></a>
+</section>
+<section id="bodynode-scaling-and-physical-properties">
+<h2>BodyNode scaling and physical properties<a class="headerlink" href="#bodynode-scaling-and-physical-properties" title="Permalink to this heading"></a></h2>
+<p>Because Nimble primarily works with human bodies, and no two human bodies are exactly the same, it is important to be able to take a generic
+skeleton and customize it to represent a specific individual, by changing the sizes of the bones and the masses and inertia of each segment.</p>
+<p>To change the size of a bone, you can call <code class="code docutils literal notranslate"><span class="pre">setScale()</span></code> with a 3-vector of scales for x, y, and z axis scaling in the local body frame, like follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="c1"># Optional: set the body in a position with skeleton.setPositions()</span>
+<span class="n">right_hand_body</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">BodyNode</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getBodyNode</span><span class="p">(</span><span class="s2">&quot;hand_r&quot;</span><span class="p">)</span>
+<span class="n">right_hand_body</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>The above example will make the right hand 5 times larger than “normal” (however that is defined in the Rajagopal skeleton) along all 3 axis.</p>
+<p>To set the mass to 5 times larger than the default, we can use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">right_hand_body</span><span class="o">.</span><span class="n">setMass</span><span class="p">(</span><span class="n">right_hand_body</span><span class="o">.</span><span class="n">getMass</span><span class="p">()</span> <span class="o">*</span> <span class="mf">5.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="listing-and-accessing-joints">
+<h2>Listing and Accessing Joints<a class="headerlink" href="#listing-and-accessing-joints" title="Permalink to this heading"></a></h2>
+<p>Often it is useful to be able to get individual <code class="code docutils literal notranslate"><span class="pre">Joint</span></code> objects out of a skeleton. There are two ways to do this: by index, and by name.</p>
+<p>To get all the joints by index, and print their names, you can run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="c1"># Load the model</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="c1"># Print the skeleton&#39;s position vector</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getNumJoints</span><span class="p">()):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">getName</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>To get a joint by name, you can run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="c1"># Load the model</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+<span class="c1"># Print the skeleton&#39;s position vector</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;knee_left&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="joint-world-locations">
+<h2>Joint World Locations<a class="headerlink" href="#joint-world-locations" title="Permalink to this heading"></a></h2>
+<p>Each joint has a “center” point in 3D space. This is generally the point that the joint rotates around. For joints like a <code class="code docutils literal notranslate"><span class="pre">RevoluteJoint</span></code>,
+where it actually rotates around a whole axis, the joint center can be anywhere along that line, depending on how the Skeleton is set up. Generally,
+the joint center is where you would intuitively expect it to be: for example, the elbow joint center is at the actual physical elbow, and not floating
+off in space along the rotational axis of the elbow. But when debugging, this is an edge case to be aware of.</p>
+<p>You can get the world location of a joint center with code like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="c1"># Load the model</span>
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+
+<span class="c1"># Print the root joint&#39;s position</span>
+<span class="n">joint_index</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPosition</span><span class="p">(</span><span class="n">joint_index</span><span class="p">))</span>
+
+<span class="c1"># Print a dictionary of key-value pairs, where the key is the joint name and the value is the joint world position</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPositionsMap</span><span class="p">())</span>
+
+<span class="c1"># Get and print a concatenated vector of joint centers</span>
+<span class="n">joints</span> <span class="o">=</span> <span class="p">[</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getNumJoints</span><span class="p">())]</span>
+<span class="n">joint_positions</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPositions</span><span class="p">(</span><span class="n">joints</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Getting a list of joint centers concatenated together might appear to be an unnecessarily cumbersome API, but it will come in handy later when we are discussing gradients.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="accessing-raw-jacobians.html" class="btn btn-neutral float-right" title="Accessing Derivatives and Jacobians" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

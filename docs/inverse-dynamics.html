@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inverse Dynamics (with Contact) &mdash; Nimble Physics 0.4.0 documentation</title>
+  <title>Computing Skeleton Joint Torques and Forces &mdash; Nimble Physics 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="System Identification" href="system-identification.html" />
-    <link rel="prev" title="Differentiable Human Body Models" href="human-body.html" /> 
+    <link rel="next" title="Working with AddBiomechanics Data" href="working-with-addbiomechanics-data.html" />
+    <link rel="prev" title="Posing Skeletons to Match Data" href="optimizing-skeletons.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,22 +45,20 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Get Started in 2 Minutes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="understanding-worlds.html">Understand Worlds and Skeletons</a></li>
-<li class="toctree-l1"><a class="reference internal" href="backprop-through-physics.html">Backprop through Physics Timesteps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="working-in-world-space.html">Specify Loss in World Space</a></li>
-<li class="toctree-l1"><a class="reference internal" href="human-body.html">Differentiable Human Body Models</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Inverse Dynamics (with Contact)</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Derivatives and Jacobians</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimizing-skeletons.html">Posing Skeletons to Match Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Computing Skeleton Joint Torques and Forces</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#plain-vanilla-inverse-dynamics">“Plain Vanilla” Inverse Dynamics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inverse-dynamics-with-one-contact">Inverse Dynamics with One Contact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inverse-dynamics-with-multiple-contacts">Inverse Dynamics with Multiple Contacts</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="system-identification.html">System Identification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="accessing-raw-jacobians.html">Accessing Jacobians of Dynamics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
 </ul>
 
         </div>
@@ -77,7 +75,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Inverse Dynamics (with Contact)</li>
+      <li class="breadcrumb-item active">Computing Skeleton Joint Torques and Forces</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/inverse-dynamics.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,9 +85,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="inverse-dynamics-with-contact">
-<span id="id"></span><h1>Inverse Dynamics (with Contact)<a class="headerlink" href="#inverse-dynamics-with-contact" title="Permalink to this heading"></a></h1>
-<p>It’s often useful to be able to reconstruct the forces/torques necessary to create an observed motion.</p>
+  <section id="computing-skeleton-joint-torques-and-forces">
+<span id="id"></span><h1>Computing Skeleton Joint Torques and Forces<a class="headerlink" href="#computing-skeleton-joint-torques-and-forces" title="Permalink to this heading"></a></h1>
+<p>It can be useful in sports, medicine, exoskeleton control, human-robotic interaction, and other applications
+to know the _forces_ and _torques_ that led to an observed motion. Nimble has many utilities to help with this, though it’s a non-trivial problem.</p>
 <p>To learn about how to do this, let’s recall the definition of a timestep (in matrix notation):</p>
 <p><span class="math notranslate nohighlight">\(v_{t+1} = v_t + \Delta t (M^{-1}(C + f_t))\)</span></p>
 <p>Here <span class="math notranslate nohighlight">\(M\)</span> is the mass matrix, and <span class="math notranslate nohighlight">\(C\)</span> is the coriolis force vector, and <span class="math notranslate nohighlight">\(f_t\)</span> is the control force applied.</p>
@@ -106,7 +105,7 @@ Rearranging the timestep equation, we end up with:</p>
 </div>
 <p>This equation doesn’t respect joint force limits, because it’s solving a linear system of equations which (if <span class="math notranslate nohighlight">\(M\)</span> is full rank) has only one solution.</p>
 <p>Here we run into problems. Suppose you’re analyzing a skeleton that’s not firmly attached to the ground (maybe a walking robot, or a human). The root joint of such a skeleton is usually a <code class="code docutils literal notranslate"><span class="pre">FreeJoint</span></code>, which encodes the 6 degrees of freedom (3 rotation, 3 translation) to allow the root of the skeleton to move freely relative to the origin.
-(For more intuition about these root joints, re-read <a class="reference internal" href="understanding-worlds.html#worlds"><span class="std std-ref">Understand Worlds and Skeletons</span></a>). The problem is that <code class="code docutils literal notranslate"><span class="pre">getInverseDynamics(...)</span></code> <em>will apply forces to the root joint!</em></p>
+(For more intuition about these root joints, re-read <span class="xref std std-ref">Worlds</span>). The problem is that <code class="code docutils literal notranslate"><span class="pre">getInverseDynamics(...)</span></code> <em>will apply forces to the root joint!</em></p>
 <p>That’s very unrealistic. It’s kind of like attaching your walking robot to an imaginary crane, that’s able to exert arbitrary forces and torques at their root joint.
 It’d be better if we could somehow ensure that the forces were coming through one or both feet in contact with the ground.</p>
 </section>
@@ -178,8 +177,8 @@ Following the same strategy outlined in the last section, now we see that our eq
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="human-body.html" class="btn btn-neutral float-left" title="Differentiable Human Body Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="system-identification.html" class="btn btn-neutral float-right" title="System Identification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="optimizing-skeletons.html" class="btn btn-neutral float-left" title="Posing Skeletons to Match Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="working-with-addbiomechanics-data.html" class="btn btn-neutral float-right" title="Working with AddBiomechanics Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
