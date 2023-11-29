@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solving Your Optimization Problems with Skeletons &mdash; Nimble Physics 0.4.0 documentation</title>
+  <title>Solving Optimization Problems with Skeletons &mdash; Nimble Physics 0.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="shortcut icon" href="_static/favicon.ico"/>
@@ -48,10 +48,12 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Solving Your Optimization Problems with Skeletons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#a-brief-intro-to-optimization">A Brief Intro to Optimization:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#computing-gradients-often-with-jacobians">Computing Gradients (often with Jacobians):</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-get-access-to-the-derivatives">How to get access to the derivatives:</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Solving Optimization Problems with Skeletons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-brief-intro-to-optimization">A Brief Intro to Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#computing-derivatives-gradients-and-jacobians">Computing Derivatives, Gradients, and Jacobians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#list-of-built-in-gradients-and-jacobians">List of Built-In Gradients and Jacobians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#composing-your-own-jacobians">Composing your own Jacobians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#velocity-and-acceleration-are-linear">Velocity and Acceleration are Linear</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="posing-skeletons.html">Posing Skeletons to Match Data</a></li>
@@ -75,7 +77,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Solving Your Optimization Problems with Skeletons</li>
+      <li class="breadcrumb-item active">Solving Optimization Problems with Skeletons</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/optimization.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,10 +87,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="solving-your-optimization-problems-with-skeletons">
-<h1>Solving Your Optimization Problems with Skeletons<a class="headerlink" href="#solving-your-optimization-problems-with-skeletons" title="Permalink to this heading"></a></h1>
+  <section id="solving-optimization-problems-with-skeletons">
+<h1>Solving Optimization Problems with Skeletons<a class="headerlink" href="#solving-optimization-problems-with-skeletons" title="Permalink to this heading"></a></h1>
 <section id="a-brief-intro-to-optimization">
-<h2>A Brief Intro to Optimization:<a class="headerlink" href="#a-brief-intro-to-optimization" title="Permalink to this heading"></a></h2>
+<h2>A Brief Intro to Optimization<a class="headerlink" href="#a-brief-intro-to-optimization" title="Permalink to this heading"></a></h2>
 <p>Let’s suppose you have a skeleton, and you would like to find the set of joint angles that minimizes the distance between the skeleton’s wrist and a target point.
 The skeleton’s joint angles are your “parameters”, and the distance between the skeleton’s wrist and the target point is your “loss”.
 We are going to try to find a setting for the parameters that minimize the loss.</p>
@@ -116,7 +118,8 @@ We are going to try to find a setting for the parameters that minimize the loss.
 <span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">createLine</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;wrist_error&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">wrist_pos</span><span class="p">,</span> <span class="n">target</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
 
 <span class="c1"># Compute the loss</span>
-<span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">wrist_pos</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">wrist_pos</span> <span class="o">-</span> <span class="n">target</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loss: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loss</span><span class="p">))</span>
 
 <span class="c1"># Block until the GUI is closed</span>
@@ -170,7 +173,8 @@ The gradient is a vector, and it has one entry for each parameter. Each entry te
   <span class="n">gui</span><span class="o">.</span><span class="n">nativeAPI</span><span class="p">()</span><span class="o">.</span><span class="n">createLine</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;wrist_error&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">wrist_pos</span><span class="p">,</span> <span class="n">target</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
 
   <span class="c1"># Compute the loss</span>
-  <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">wrist_pos</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span>
+  <span class="n">error</span> <span class="o">=</span> <span class="n">wrist_pos</span> <span class="o">-</span> <span class="n">target</span>
+  <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loss[&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;]: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loss</span><span class="p">))</span>
 
   <span class="c1"># Get gradient - we will discuss this more in following sections</span>
@@ -193,29 +197,113 @@ The gradient is a vector, and it has one entry for each parameter. Each entry te
 </div>
 <p>This code is mostly stuff you have seen before, except for the gradient computation, which we will discuss in the following sections.</p>
 </section>
-<section id="computing-gradients-often-with-jacobians">
-<h2>Computing Gradients (often with Jacobians):<a class="headerlink" href="#computing-gradients-often-with-jacobians" title="Permalink to this heading"></a></h2>
-<p>Generally, there will be a few intermediate quantities that you need to compute in order to compute the loss from your parameters.</p>
-<p><em>TODO: section under construction</em></p>
-</section>
-<section id="how-to-get-access-to-the-derivatives">
-<h2>How to get access to the derivatives:<a class="headerlink" href="#how-to-get-access-to-the-derivatives" title="Permalink to this heading"></a></h2>
-<p>For some “old school” control algorithms like <a class="reference external" href="https://inst.eecs.berkeley.edu/~cs294-40/fa08/scribes/lecture7.pdf">Differential Dynamic Programming (DDP)</a>, you need access to the Jacobians of dynamics.</p>
-<p>If we say the state at time <span class="math notranslate nohighlight">\(t\)</span> is <span class="math notranslate nohighlight">\(s_t\)</span>, and the action is <span class="math notranslate nohighlight">\(a_t\)</span>, then our timestep can be thought of as:</p>
-<p><span class="math notranslate nohighlight">\(s_{t+1} = f(s_t, a_t)\)</span></p>
-<p>We’d like to be able to access the Jacobians:</p>
-<p><span class="math notranslate nohighlight">\(\frac{\partial s_{t+1}}{\partial s_t}\)</span> - which we’ll call the “state Jacobian” (<code class="code docutils literal notranslate"><span class="pre">stateJac</span></code> below)</p>
-<p><span class="math notranslate nohighlight">\(\frac{\partial s_{t+1}}{\partial a_t}\)</span> - which we’ll call the “action Jacobian” (<code class="code docutils literal notranslate"><span class="pre">actionJac</span></code> below)</p>
-<p>Getting these quantities out of Nimble is easy! Simply call:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stateJac</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">getStateJacobian</span><span class="p">()</span>
-<span class="n">actionJac</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">getActionJacobian</span><span class="p">()</span>
+<section id="computing-derivatives-gradients-and-jacobians">
+<h2>Computing Derivatives, Gradients, and Jacobians<a class="headerlink" href="#computing-derivatives-gradients-and-jacobians" title="Permalink to this heading"></a></h2>
+<p>In the case of our example problem, as is often the case in optimization problems, the loss is not expressed directly in “parameter space.”
+It takes us two hops to get from parameters to loss. We start with the skeleton’s joint angles, then we use those to
+compute the skeleton’s wrist position, and then we use that to compute the distance from the skeleton’s wrist to the target (the loss).</p>
+<p>Let’s switch from Python to a tiny bit of math, to make this expression really crisp. Let’s introduce some math variables as equivalents to the code in the last section:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(q\)</span> is <code class="code docutils literal notranslate"><span class="pre">positions:</span> <span class="pre">np.ndarray</span></code>, the skeleton’s joint angles</p></li>
+<li><p><span class="math notranslate nohighlight">\(w\)</span> is <code class="code docutils literal notranslate"><span class="pre">wrist_pos:</span> <span class="pre">np.ndarray</span></code>, the skeleton’s wrist position</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span> is <code class="code docutils literal notranslate"><span class="pre">target:</span> <span class="pre">np.ndarray</span></code>, and the target position for the wrist</p></li>
+<li><p><span class="math notranslate nohighlight">\(w = f(q)\)</span> is <code class="code docutils literal notranslate"><span class="pre">wrist_pos</span> <span class="pre">=</span> <span class="pre">skeleton.getJointWorldPositions([right_wrist])</span></code>, the function that maps joint angles to wrist position (we generally call this the “forward kinematics” function)</p></li>
+<li><p><span class="math notranslate nohighlight">\(L(q) = \|w - p\|\)</span> is <code class="code docutils literal notranslate"><span class="pre">loss</span> <span class="pre">=</span> <span class="pre">np.linalg.norm(wrist_pos</span> <span class="pre">-</span> <span class="pre">target)</span></code>, the loss function</p></li>
+</ul>
+<p>So our two hops are:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(w = f(q)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(L(q) = \|w - p\|\)</span></p></li>
+</ul>
+<p>So then our optimization problem is to find the joint angles <span class="math notranslate nohighlight">\(q\)</span> that minimize <span class="math notranslate nohighlight">\(L(q)\)</span>, going through the two hops above.
+We are going to do this by bumping <span class="math notranslate nohighlight">\(q\)</span> in a direction to to decrease <span class="math notranslate nohighlight">\(L(q)\)</span> a tiny bit, and then repeating that process over and over again.</p>
+<p>In order to know which direction to bump <span class="math notranslate nohighlight">\(q\)</span> in, we want to know how <span class="math notranslate nohighlight">\(L(q)\)</span> changes when we bump each element of <span class="math notranslate nohighlight">\(q\)</span> a tiny bit.
+We can do this by taking the derivative of <span class="math notranslate nohighlight">\(L(q)\)</span> with respect to an element of <span class="math notranslate nohighlight">\(q\)</span>, let’s call that <span class="math notranslate nohighlight">\(q_i\)</span>, which we write in the following format:</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial L(q)}{\partial q_i}\)</span></p>
+<p>This notation is called “partial derivative notation”, and it is a way of saying “how much does the top thing change (in this case that change is <span class="math notranslate nohighlight">\(\partial L(q)\)</span>) when we change the bottom thing a tiny bit (in this case that change is <span class="math notranslate nohighlight">\(\partial q_i\)</span>)?” We write it as a ratio.
+When we take the derivative of <span class="math notranslate nohighlight">\(L(q)\)</span> with respect to <span class="math notranslate nohighlight">\(q_i\)</span>, we get a single number. If, for all the different <span class="math notranslate nohighlight">\(q_i\)</span>, we take each derivative in turn and stack all of those numbers together, we would get a vector, which we call the “gradient” of <span class="math notranslate nohighlight">\(L(q)\)</span> with respect to <span class="math notranslate nohighlight">\(q\)</span>, which we write in the following notation:</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial L(q)}{\partial q} = \begin{bmatrix} \frac{\partial L(q)}{\partial q_1} \\ \frac{\partial L(q)}{\partial q_2} \\ \vdots \\ \frac{\partial L(q)}{\partial q_n} \end{bmatrix}\)</span></p>
+<p>If we are taking the derivative of a vector-valued function with respect to another vector, we will get a whole matrix that we call that a “Jacobian”. For example, if we want to know how the wrist position changes when we change the joint angles, we would write:</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial w}{\partial q} = \begin{bmatrix} \frac{\partial w_x}{\partial q_1} &amp; \frac{\partial w_x}{\partial q_2} &amp; \cdots &amp; \frac{\partial w_x}{\partial q_n} \\ \frac{\partial w_y}{\partial q_1} &amp; \frac{\partial w_y}{\partial q_2} &amp; \cdots &amp; \frac{\partial w_y}{\partial q_n} \\ \frac{\partial w_z}{\partial q_1} &amp; \frac{\partial w_z}{\partial q_2} &amp; \cdots &amp; \frac{\partial w_z}{\partial q_n} \end{bmatrix}\)</span></p>
+<p>Nimble has lots of efficient C++ implementations to compute various Jacobians, and the one above can be computed with the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d_wrist_pos_d_joint_angles</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPositionsJacobianWrtJointPositions</span><span class="p">([</span><span class="n">right_wrist</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>That’ll return numpy arrays (<cite>not</cite> PyTorch tensors, computing these Jacobians is not itself differentiable) of the requested Jacobians.</p>
-<p>These Jacobians will change as you change either the state or the action, so remember to recompute!</p>
-<p><strong>Performance note</strong>: internally, a call to either <code class="code docutils literal notranslate"><span class="pre">world.getStateJacobian()</span></code> or <code class="code docutils literal notranslate"><span class="pre">world.getActionJacobian()</span></code> must run a timestep and cache the result.
-This means that if you call both without changing either your state or your action, the second Jacobian requested is (almost) free.
-Be aware though that the first time you call either <code class="code docutils literal notranslate"><span class="pre">world.getStateJacobian()</span></code> or <code class="code docutils literal notranslate"><span class="pre">world.getActionJacobian()</span></code> in a given state and action, that’ll cost about the same as a call to <code class="code docutils literal notranslate"><span class="pre">nimble.timestep(...)</span></code>.</p>
+<p>Now that we know how the wrist position changes when we change the joint angles, we can use the chain rule to compute how the loss changes when we change the joint angles.
+It is handy to memorize that the gradient of the inner product of a vector with itself, which is a very common final step in a loss function, is just twice the vector itself.</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial x^Tx}{\partial x} = 2x\)</span></p>
+<p>So then we can use the <a class="reference external" href="https://www.khanacademy.org/math/ap-calculus-ab/ab-differentiation-2-new/ab-3-1a/a/chain-rule-review">chain rule</a> to compute the gradient of the loss with respect to the joint angles:</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial L(q)}{\partial q} = \frac{\partial L(q)}{\partial w} \frac{\partial w}{\partial q} = 2(w - p) \frac{\partial w}{\partial q}\)</span></p>
+<p>By convention, we typically transpose this to get a column vector for the gradient, so that we can write it as a matrix multiplication:</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial L(q)}{\partial q} = \frac{\partial w}{\partial q}^T 2(w - p)\)</span></p>
+<p>This all ends up becoming these three simple lines of code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get gradient - we will discuss this more in following sections</span>
+<span class="n">d_loss_d_wrist_pos</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">wrist_pos</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span>
+<span class="n">d_wrist_pos_d_joint_angles</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPositionsJacobianWrtJointPositions</span><span class="p">([</span><span class="n">right_wrist</span><span class="p">])</span>
+<span class="n">d_loss_d_joint_angles</span> <span class="o">=</span> <span class="n">d_wrist_pos_d_joint_angles</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">d_loss_d_wrist_pos</span>
+</pre></div>
+</div>
+<p>Once we have the gradient of our loss, it is a simple matter of subtracting a tiny bit of the gradient from our current guess for the joint angles, and then repeating that process over and over again.</p>
+</section>
+<section id="list-of-built-in-gradients-and-jacobians">
+<h2>List of Built-In Gradients and Jacobians<a class="headerlink" href="#list-of-built-in-gradients-and-jacobians" title="Permalink to this heading"></a></h2>
+<p>If you are looking for a particular Jacobian to fulfill the chain rule, and you do not see it, it may not be included because it is always zero (the two quantities are not related).
+For example, we do not have a function to compute the Jacobian of the world position of the wrist with respect to the joint <em>velocities</em> (which would be named <code class="code docutils literal notranslate"><span class="pre">skeleton.getJointWorldPositionsJacobianWrtJointVelocities()</span></code>), because those two quantities are not related.
+For Jacobians you expect to be non-zero, you can use your auto-complete tool to search for them, or read below:</p>
+<p>The general naming convention for some Nimble Jacobians is <code class="code docutils literal notranslate"><span class="pre">skeleton.get&lt;output&gt;JacobianWrt&lt;parameters&gt;()</span></code>, where <code class="code docutils literal notranslate"><span class="pre">&lt;output&gt;</span></code> is the thing you want to take the derivative of, and <code class="code docutils literal notranslate"><span class="pre">&lt;parameters&gt;</span></code> is the thing you want to take the derivative with respect to.
+These functions all return rectangular Numpy matrices.</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">skeleton.getJointWorldPositionsJacobianWrtJointPositions(joints=...)</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">skeleton.getJointWorldPositionsJacobianWrtBodyScales()</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">skeleton.getJointWorldPositionsJacobianWrtGroupScales()</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">skeleton.getMarkerWorldPositionsJacobianWrtJointPositions(markers=...,</span> <span class="pre">joints=...)</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">skeleton.getMarkerWorldPositionsJacobianWrtBodyScales(markers=...)</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">skeleton.getMarkerWorldPositionsJacobianWrtGroupScales(markers=...)</span></code></p></li>
+<li><p><em>TODO: complete this list</em></p></li>
+</ul>
+<p>There is a larger set of Jacobians which take their “with respect to” portion as the argument <cite>wrt</cite>.
+For these, the <cite>wrt</cite> argument is on the <cite>nimble.neural.WithRespectTo</cite> object. Options are as follows:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_POSITION</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_VELOCITY</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_FORCE</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_ACCELERATION</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_GROUP_SCALES</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_GROUP_MASSES</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_GROUP_INERTIAS</span></code></p></li>
+</ul>
+<p>The Jacobians that take these arguments are given below:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">skeleton.getGyroReadingsJacobianWrt(gyros=...,</span> <span class="pre">wrt=...)</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">skeleton.getAccelerometerReadingsJacobianWrt(gyros=...,</span> <span class="pre">wrt=...)</span></code></p></li>
+<li><p><em>TODO: complete this list</em></p></li>
+</ul>
+</section>
+<section id="composing-your-own-jacobians">
+<h2>Composing your own Jacobians<a class="headerlink" href="#composing-your-own-jacobians" title="Permalink to this heading"></a></h2>
+<p>If you need a Jacobian that is not directly provided by Nimble, you can compose your own using the chain rule.</p>
+<p>For example, if you have <span class="math notranslate nohighlight">\(x = f(g(y))\)</span>, and you have <span class="math notranslate nohighlight">\(\frac{\partial f}{\partial g}\)</span> and <span class="math notranslate nohighlight">\(\frac{\partial g}{\partial y}\)</span>, you can compute <span class="math notranslate nohighlight">\(\frac{\partial x}{\partial y}\)</span> by multiplying the two Jacobians together, in code something like the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d_x_d_g</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># Get this from Nimble</span>
+<span class="n">d_g_d_y</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># Get this from Nimble</span>
+<span class="n">d_x_d_y</span> <span class="o">=</span> <span class="n">d_x_d_g</span> <span class="o">@</span> <span class="n">d_g_d_y</span>
+</pre></div>
+</div>
+</section>
+<section id="velocity-and-acceleration-are-linear">
+<h2>Velocity and Acceleration are Linear<a class="headerlink" href="#velocity-and-acceleration-are-linear" title="Permalink to this heading"></a></h2>
+<p>A handy fact to be aware of is that if you hold the positions of a skeleton fixed, the world velocity of any body on the skeleton is a linear functions of the joint velocities!</p>
+<p>That means that if you have the Jacobian that relates changes in joint angles to changes in body positions, for example, you can rely on the fact that that relationship will remain constant regardless of the joint velocities.</p>
+<p>To use the math from the previous section, where we have <span class="math notranslate nohighlight">\(\dot{q}\)</span> is joint velocities and <span class="math notranslate nohighlight">\(\dot{w}\)</span> is world velocities, we can say:</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial \dot{w}}{\partial \dot{q}} = \frac{\partial w}{\partial q}\)</span>, which you can get with <code class="code docutils literal notranslate"><span class="pre">skeleton.getJointWorldPositionsJacobianWrtJointPositions([right_wrist])</span></code></p>
+<p>If we have a desired velocity that we want the hand to be travelling at, we can compute the joint velocities that will achieve that velocity with simple linear least squares:</p>
+<p><span class="math notranslate nohighlight">\(\dot{q} = \frac{\partial \dot{w}}{\partial \dot{q}}^{-1} \dot{w}_{desired}\)</span></p>
+<p>In code, this looks like the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d_w_d_q</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJointWorldPositionsJacobianWrtJointPositions</span><span class="p">([</span><span class="n">right_wrist</span><span class="p">])</span>
+<span class="n">d_q_d_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">d_w_d_q</span><span class="p">)</span>
+<span class="n">desired_wrist_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">desired_joint_vel</span> <span class="o">=</span> <span class="n">d_q_d_w</span> <span class="o">@</span> <span class="n">desired_wrist_vel</span>
+</pre></div>
+</div>
 </section>
 </section>
 
