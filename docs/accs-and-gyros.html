@@ -19,6 +19,7 @@
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -197,6 +198,29 @@ fixed and this non-linear relationship between joint velocities and acceleration
 <section id="estimating-poses-given-imu-readings">
 <h2>Estimating Poses given IMU Readings<a class="headerlink" href="#estimating-poses-given-imu-readings" title="Permalink to this heading"></a></h2>
 <p>This is a non-linear problem, with lots of existing research, and lots more work to be done. We can point you at the necessary Jacobians to get started.</p>
+<p>Here is a list of the relevant Jacobians:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial g}{\partial q}\)</span> is <code class="code docutils literal notranslate"><span class="pre">skeleton.getGyroReadingsJacobianWrt(sensors,</span> <span class="pre">wrt=nimble.neural.WithRespectTo.WRT_POSITION)</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial g}{\partial \dot{q}}\)</span> is <code class="code docutils literal notranslate"><span class="pre">skeleton.getGyroReadingsJacobianWrt(sensors,</span> <span class="pre">wrt=nimble.neural.WithRespectTo.WRT_VELOCITY)</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial g}{\partial \ddot{q}}\)</span> is 0</p></li>
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial a}{\partial q}\)</span> is <code class="code docutils literal notranslate"><span class="pre">skeleton.getAccelerometerReadingsJacobianWrt(sensors,</span> <span class="pre">wrt=nimble.neural.WithRespectTo.WRT_POSITION)</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial a}{\partial \dot{q}}\)</span> is <code class="code docutils literal notranslate"><span class="pre">skeleton.getAccelerometerReadingsJacobianWrt(sensors,</span> <span class="pre">wrt=nimble.neural.WithRespectTo.WRT_VELOCITY)</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial a}{\partial \ddot{q}}\)</span> is <code class="code docutils literal notranslate"><span class="pre">skeleton.getAccelerometerReadingsJacobianWrt(sensors,</span> <span class="pre">wrt=nimble.neural.WithRespectTo.WRT_ACCELERATION)</span></code></p></li>
+</ul>
+<p>One could imagine a Kalman filter with a state vector of <span class="math notranslate nohighlight">\([q, \dot{q}, \ddot{q}]\)</span> and a measurement vector of <span class="math notranslate nohighlight">\([g, a]\)</span></p>
+<p>Then, the state transition Jacobian would be:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+  I &amp; \Delta t I &amp; \frac{1}{2} \Delta t^2 I \\
+  0 &amp; I &amp; \Delta t I \\
+  0 &amp; 0 &amp; I
+\end{bmatrix}\end{split}\]</div>
+<p>And the measurement Jacobian would be:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+  \frac{\partial g}{\partial q} &amp; \frac{\partial g}{\partial \dot{q}} &amp; 0 \\
+  \frac{\partial a}{\partial q} &amp; \frac{\partial a}{\partial \dot{q}} &amp; \frac{\partial a}{\partial \ddot{q}}
+\end{bmatrix}\end{split}\]</div>
 </section>
 </section>
 

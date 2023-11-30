@@ -131,3 +131,31 @@ Estimating Poses given IMU Readings
 ########################################
 
 This is a non-linear problem, with lots of existing research, and lots more work to be done. We can point you at the necessary Jacobians to get started.
+
+Here is a list of the relevant Jacobians:
+
+- :math:`\frac{\partial g}{\partial q}` is :code:`skeleton.getGyroReadingsJacobianWrt(sensors, wrt=nimble.neural.WithRespectTo.WRT_POSITION)`
+- :math:`\frac{\partial g}{\partial \dot{q}}` is :code:`skeleton.getGyroReadingsJacobianWrt(sensors, wrt=nimble.neural.WithRespectTo.WRT_VELOCITY)`
+- :math:`\frac{\partial g}{\partial \ddot{q}}` is 0
+- :math:`\frac{\partial a}{\partial q}` is :code:`skeleton.getAccelerometerReadingsJacobianWrt(sensors, wrt=nimble.neural.WithRespectTo.WRT_POSITION)`
+- :math:`\frac{\partial a}{\partial \dot{q}}` is :code:`skeleton.getAccelerometerReadingsJacobianWrt(sensors, wrt=nimble.neural.WithRespectTo.WRT_VELOCITY)`
+- :math:`\frac{\partial a}{\partial \ddot{q}}` is :code:`skeleton.getAccelerometerReadingsJacobianWrt(sensors, wrt=nimble.neural.WithRespectTo.WRT_ACCELERATION)`
+
+One could imagine a Kalman filter with a state vector of :math:`[q, \dot{q}, \ddot{q}]` and a measurement vector of :math:`[g, a]`
+
+Then, the state transition Jacobian would be:
+
+.. math::
+  \begin{bmatrix}
+    I & \Delta t I & \frac{1}{2} \Delta t^2 I \\
+    0 & I & \Delta t I \\
+    0 & 0 & I
+  \end{bmatrix}
+
+And the measurement Jacobian would be:
+
+.. math::
+  \begin{bmatrix}
+    \frac{\partial g}{\partial q} & \frac{\partial g}{\partial \dot{q}} & 0 \\
+    \frac{\partial a}{\partial q} & \frac{\partial a}{\partial \dot{q}} & \frac{\partial a}{\partial \ddot{q}}
+  \end{bmatrix}
