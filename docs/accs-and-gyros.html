@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data: Accelerometers, Gyros and Magnetometers &mdash; Nimble Physics 0.4.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://nimblephysics.org/accs-and-gyros.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Computing Skeleton Joint Torques and Forces" href="inverse-dynamics.html" />
+    <link rel="prev" title="Data: Markers and Joint Centers" href="markers-and-joint-centers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html">
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization.html">Solving Optimization Problems with Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="markers-and-joint-centers.html">Data: Markers and Joint Centers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data: Accelerometers, Gyros and Magnetometers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#representing-imus-in-nimble">Representing IMUs in Nimble</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#estimating-joint-velocity-and-acceleration-given-imu-readings">Estimating Joint Velocity and Acceleration given IMU Readings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#estimating-poses-given-imu-readings">Estimating Poses given IMU Readings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nimble Physics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Data: Accelerometers, Gyros and Magnetometers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/accs-and-gyros.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-accelerometers-gyros-and-magnetometers">
+<h1>Data: Accelerometers, Gyros and Magnetometers<a class="headerlink" href="#data-accelerometers-gyros-and-magnetometers" title="Permalink to this heading"></a></h1>
+<p>Inertial measurement units (IMUs) contain an accelerometer and a gyroscope. Often they also contain a magnetometer.
+These sensors are used to estimate the orientation of the device, using the linear acceleration, rotational velocity, and magnetic field sensed by the device.
+When you strap (a set of) IMUs to a person, you can try to estimate the pose, velocity, and acceleration of the person.
+This has advantages over optical mocap (either with markers or markerless), because it can be worn on the body (which means it can go with you outside of the lab), and it can directly measure velocity and acceleration (which requires finite differencing with optical motion capture systems).</p>
+<p>IMUs are common, in both motion capture and in wearable devices like smart watches, smart glasses, smart shoes, and smart shoes.</p>
+<section id="representing-imus-in-nimble">
+<h2>Representing IMUs in Nimble<a class="headerlink" href="#representing-imus-in-nimble" title="Permalink to this heading"></a></h2>
+<p>To represent accelerometers and gyroscopes, you’ll use a pair of a <code class="code docutils literal notranslate"><span class="pre">nimble.dynamics.BodyNode</span></code> (the bone that the sensor is rigidly attached to) and a <code class="code docutils literal notranslate"><span class="pre">nimble.math.Isometry3</span></code> (the translation and rotation of the sensor in that bone’s frame). So that means you’ll have a <code class="code docutils literal notranslate"><span class="pre">List[Pair[BodyNode,</span> <span class="pre">Isometry3]]</span></code> for the accelerometers, and another list for the gyroscopes (probably identical, if you’re using IMUs which bundle both sensors together).</p>
+<p>With a known state for your skeleton (position, velocity, acceleration), you can generate virtual gyroscope and accelerometer readings. For simplicity, let’s imagine we are working with a single IMU inside of a smart watch on the left wrist:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+
+<span class="n">right_wrist</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Joint</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;radius_hand_r&quot;</span><span class="p">)</span>
+<span class="n">translation</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">rotation</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">watch_offset</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Isometry3</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Isometry3</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">translation</span><span class="p">)</span>
+
+<span class="n">sensors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pair</span><span class="p">[</span><span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">BodyNode</span><span class="p">,</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Isometry3</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">right_wrist</span><span class="p">,</span> <span class="n">watch_offset</span><span class="p">)]</span>
+
+<span class="c1"># Set the initial state of the skeleton to whatever you want</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setGravity</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]))</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setPositions</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getRandomPose</span><span class="p">())</span> <span class="c1"># this generates a pose within legal joint limits</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setVelocities</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getRandomVelocity</span><span class="p">())</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setAccelerations</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">()))</span>
+
+<span class="c1"># Compute some noiseless sensor readings</span>
+<span class="n">watch_acc</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getAccelerometerReadings</span><span class="p">(</span><span class="n">sensors</span><span class="p">)</span>
+<span class="n">watch_rot_vel</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getGyroReadings</span><span class="p">(</span><span class="n">sensors</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="estimating-joint-velocity-and-acceleration-given-imu-readings">
+<h2>Estimating Joint Velocity and Acceleration given IMU Readings<a class="headerlink" href="#estimating-joint-velocity-and-acceleration-given-imu-readings" title="Permalink to this heading"></a></h2>
+<p>It turns out, if you hold the position of the skeleton fixed, then solving for the joint velocities
+given the gyro readings is a linear problem.
+Then, if you hold the position and velocity of the skeleton fixed, then solving for the joint
+accelerations given the accelerometer readings is also a linear problem.
+The Jacobians relating joint velocities to sensor readings is an exact function relating any amount
+of change of joint velocity to change in sensor reading. Likewise for acceleration. So you can use a
+linear least squares solver to solve for the joint velocities and accelerations.</p>
+<p>This may at first feel too good to be true, so let me try to provide some simple intuition about why
+these relationships are linear.</p>
+<p>Let’s start with sensor velocity and joint velocity. If we have a sensor at the end of a pole (a bone), which is
+rotating around a fixed point (a joint), then the velocity of the sensor is linearly related to the velocity
+of the joint (by the length of the pole). Regardless of how fast that pole is rotating around its pivot,
+increasing the rotation speed by 1 radian per second will <em>always</em> increase the velocity of the sensor by
+the length of the pole.</p>
+<a class="reference internal image-reference" href="_images/velocity_is_linear_1.png"><img alt="_images/velocity_is_linear_1.png" src="_images/velocity_is_linear_1.png" style="width: 276px;" /></a>
+<p>If we begin adding a translational velocity to the joint as well (perhaps from its parent), we can simply
+add that to the velocity of the sensor. Also a linear operation!</p>
+<a class="reference internal image-reference" href="_images/velocity_is_linear_2.png"><img alt="_images/velocity_is_linear_2.png" src="_images/velocity_is_linear_2.png" style="width: 413px;" /></a>
+<p>You can scale up this intuition to a whole skeleton, with every joint’s velocity linearly changing the (linear and rotational) velocities of any sensors below it on the tree.
+The code to compute the Jacobian for gyroscopes is <code class="code docutils literal notranslate"><span class="pre">skeleton.getGyroReadingsJacobianWrt(sensors,</span> <span class="pre">wrt=nimble.neural.WithRespectTo.WRT_VELOCITY)</span></code>.</p>
+<p>Acceleration has no effect on the velocity of the sensor (at least, not immediately). So the velocity of the
+sensor is linearly related to the velocity of the joint, regardless of the acceleration of the joint.</p>
+<p>A similar set of reasoning applies to the relationship between sensor acceleration and joint acceleration.
+It turns out, actually, that the relationship is <em>literally identical</em> to the relationship between sensor
+velocity and joint velocity. Just take the time derivative of both sides, and the relationship (ie the Jacobian) remains exactly the same.</p>
+<a class="reference internal image-reference" href="_images/acc_is_linear_1.png"><img alt="_images/acc_is_linear_1.png" src="_images/acc_is_linear_1.png" style="width: 276px;" /></a>
+<p>You can also scale up this intuition to a whole skeleton, with every joint’s velocity linearly changing the (linear and rotational) velocities of any sensors below it on the tree.
+The code to compute the Jacobian for gyroscopes is <code class="code docutils literal notranslate"><span class="pre">skeleton.getAccelerometerReadingsJacobianWrt(sensors,</span> <span class="pre">wrt=nimble.neural.WithRespectTo.WRT_ACCELERATION)</span></code>.</p>
+<p>The last thing to note is that the relationship between sensor readings and joint velocities and accelerations.
+This, sadly, is <em>not</em> a linear relationship. Increasing the rotational velocity of a joint increases the centripetal
+acceleration of the sensor with a squared term. You can still compute the Jacobian, but now instead of being a precise
+function it is simply the first order Taylor approximation of the relationship. The code to compute the Jacobian for
+acccelerometers is <code class="code docutils literal notranslate"><span class="pre">skeleton.getAccelerometerReadingsJacobianWrt(sensors,</span> <span class="pre">wrt=nimble.neural.WithRespectTo.WRT_VELOCITY)</span></code>.</p>
+<p>If you first solve for the joint velocities using the gyroscope data (and you trust those velocities), then you can be held
+fixed and this non-linear relationship between joint velocities and accelerations can be irrelevant.</p>
+<p>So let’s dive into some code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">rajagopal_opensim</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">OpenSimFile</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">RajagopalHumanBodyModel</span><span class="p">()</span>
+<span class="n">skeleton</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Skeleton</span> <span class="o">=</span> <span class="n">rajagopal_opensim</span><span class="o">.</span><span class="n">skeleton</span>
+
+<span class="n">right_wrist</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">Joint</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getJoint</span><span class="p">(</span><span class="s2">&quot;radius_hand_r&quot;</span><span class="p">)</span>
+<span class="n">translation</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">rotation</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">watch_offset</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Isometry3</span> <span class="o">=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Isometry3</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">translation</span><span class="p">)</span>
+
+<span class="n">sensors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pair</span><span class="p">[</span><span class="n">nimble</span><span class="o">.</span><span class="n">dynamics</span><span class="o">.</span><span class="n">BodyNode</span><span class="p">,</span> <span class="n">nimble</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">Isometry3</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">right_wrist</span><span class="p">,</span> <span class="n">watch_offset</span><span class="p">)]</span>
+
+<span class="c1"># Set the initial state of the skeleton</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setGravity</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]))</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setPositions</span><span class="p">(</span><span class="n">skeleton</span><span class="o">.</span><span class="n">getRandomPose</span><span class="p">())</span> <span class="c1"># this generates a pose within legal joint limits</span>
+
+<span class="c1"># Some random sensor readings</span>
+<span class="n">watch_acc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">watch_rot_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Solve for the (least-squares) joint velocities</span>
+<span class="n">d_rot_vel_d_vel</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getGyroReadingsJacobianWrt</span><span class="p">(</span><span class="n">sensors</span><span class="p">,</span> <span class="n">wrt</span><span class="o">=</span><span class="n">nimble</span><span class="o">.</span><span class="n">neural</span><span class="o">.</span><span class="n">WithRespectTo</span><span class="o">.</span><span class="n">WRT_VELOCITY</span><span class="p">)</span>
+<span class="n">vel</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">d_rot_vel_d_vel</span><span class="p">,</span> <span class="n">watch_rot_vel</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setVelocities</span><span class="p">(</span><span class="n">vel</span><span class="p">)</span>
+
+<span class="c1"># Solve for the (least-squares) joint accelerations</span>
+<span class="n">d_lin_acc_d_acc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">skeleton</span><span class="o">.</span><span class="n">getAccelerometerReadingsJacobianWrt</span><span class="p">(</span><span class="n">sensors</span><span class="p">,</span> <span class="n">wrt</span><span class="o">=</span><span class="n">nimble</span><span class="o">.</span><span class="n">neural</span><span class="o">.</span><span class="n">WithRespectTo</span><span class="o">.</span><span class="n">WRT_ACCELERATION</span><span class="p">)</span>
+<span class="n">acc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">d_lin_acc_d_acc</span><span class="p">,</span> <span class="n">watch_acc</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">skeleton</span><span class="o">.</span><span class="n">setAccelerations</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="estimating-poses-given-imu-readings">
+<h2>Estimating Poses given IMU Readings<a class="headerlink" href="#estimating-poses-given-imu-readings" title="Permalink to this heading"></a></h2>
+<p>This is a non-linear problem, with lots of existing research, and lots more work to be done. We can point you at the necessary Jacobians to get started.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="markers-and-joint-centers.html" class="btn btn-neutral float-left" title="Data: Markers and Joint Centers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="inverse-dynamics.html" class="btn btn-neutral float-right" title="Computing Skeleton Joint Torques and Forces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
