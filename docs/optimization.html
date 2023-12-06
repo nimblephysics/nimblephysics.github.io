@@ -57,7 +57,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="markers-and-joint-centers.html">Data: Markers and Joint Centers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="accs-and-gyros.html">Data: Accelerometers and Gyros</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accs-and-gyros.html">Data: Accelerometers, Gyros and Magnetometers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
@@ -265,13 +265,13 @@ These functions all return rectangular Numpy matrices.</p>
 <p>There is a larger set of Jacobians which take their “with respect to” portion as the argument <cite>wrt</cite>.
 For these, the <cite>wrt</cite> argument is on the <cite>nimble.neural.WithRespectTo</cite> object. Options are as follows:</p>
 <ul class="simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_POSITION</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_VELOCITY</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_FORCE</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_ACCELERATION</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_GROUP_SCALES</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_GROUP_MASSES</span></code></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WithRespectTo.WRT_GROUP_INERTIAS</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WRT_POSITION</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WRT_VELOCITY</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WRT_FORCE</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WRT_ACCELERATION</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WRT_GROUP_SCALES</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WRT_GROUP_MASSES</span></code></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">nimble.neural.WRT_GROUP_INERTIAS</span></code></p></li>
 </ul>
 <p>The Jacobians that take these arguments are given below:</p>
 <ul class="simple">
