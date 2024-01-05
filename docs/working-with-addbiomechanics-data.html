@@ -277,7 +277,7 @@ Let’s assume you have downloaded a <a class="reference external" href="https:/
 </div>
 <p>You can then open a browser to <a class="reference external" href="http://localhost:8080">http://localhost:8080</a> to see the skeleton in the GUI.</p>
 <p>But that’s not very interesting, because it’s just a skeleton in a neutral pose. Let’s also load and render some motion data!
-To do that, we will use the <code class="code docutils literal notranslate"><span class="pre">loadFrames</span></code> method on <code class="code docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code>, which will load (as many as we request)
+To do that, we will use the <code class="code docutils literal notranslate"><span class="pre">readFrames</span></code> method on <code class="code docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code>, which will load (as many as we request)
 <code class="code docutils literal notranslate"><span class="pre">Frame</span></code> objects from the B3D file. The <code class="code docutils literal notranslate"><span class="pre">Frame</span></code> objects contain all the information about the skeleton’s state at that frame,
 and contain information for each processing pass separately. If we do this in a loop, we can animate the skeleton in the GUI!</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
@@ -302,11 +302,11 @@ and contain information for each processing pass separately. If we do this in a 
 <span class="n">trial</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="c1"># Load all the frames from the selected trial</span>
-<span class="n">trial_frames</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">Frame</span><span class="p">]</span> <span class="o">=</span> <span class="n">your_subject</span><span class="o">.</span><span class="n">loadFrames</span><span class="p">(</span>
+<span class="n">trial_frames</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">Frame</span><span class="p">]</span> <span class="o">=</span> <span class="n">your_subject</span><span class="o">.</span><span class="n">readFrames</span><span class="p">(</span>
     <span class="n">trial</span><span class="o">=</span><span class="n">trial</span><span class="p">,</span>
     <span class="n">processingPass</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="n">startFrame</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">endFrame</span><span class="o">=</span><span class="n">your_subject</span><span class="o">.</span><span class="n">getTrialLength</span><span class="p">(</span><span class="n">trial</span><span class="p">))</span>
+    <span class="n">numFramesToRead</span><span class="o">=</span><span class="n">your_subject</span><span class="o">.</span><span class="n">getTrialLength</span><span class="p">(</span><span class="n">trial</span><span class="p">))</span>
 
 <span class="c1"># Figure out how many (fractional) seconds each frame represents</span>
 <span class="n">seconds_per_frame</span> <span class="o">=</span> <span class="n">your_subject</span><span class="o">.</span><span class="n">getTrialTimestep</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
@@ -344,7 +344,7 @@ of RAM available on your machine.</p>
 <p>To load a file at <code class="code docutils literal notranslate"><span class="pre">your/path/your_subject_name.b3d</span></code>, simply instantiate a <code class="code docutils literal notranslate"><span class="pre">your_subject</span> <span class="pre">=</span> <span class="pre">nimble.biomechanics.SubjectOnDisk(&quot;your/path/your_subject_name.b3d&quot;)</span></code>.
 Note that instantiating <code class="code docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code> <em>does not</em> load all the trials into memory, it merely keeps a lightweight index of the file in memory, which can then load
 arbitrary frames of trials quickly and efficiently. It’s safe to load an enormous number of <code class="code docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code> files simultaneously, even with very limited RAM.</p>
-<p>Once you have a <code class="code docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code>, the main point of a <code class="code docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code> is to load arrays of <code class="code docutils literal notranslate"><span class="pre">Frame</span></code> objects by calling <code class="code docutils literal notranslate"><span class="pre">frames</span> <span class="pre">=</span> <span class="pre">your_subject.loadFrames(...)</span></code>.
+<p>Once you have a <code class="code docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code>, the main point of a <code class="code docutils literal notranslate"><span class="pre">SubjectOnDisk</span></code> is to load arrays of <code class="code docutils literal notranslate"><span class="pre">Frame</span></code> objects by calling <code class="code docutils literal notranslate"><span class="pre">frames</span> <span class="pre">=</span> <span class="pre">your_subject.readFrames(...)</span></code>.
 Each <code class="code docutils literal notranslate"><span class="pre">Frame</span></code> contains all the information to set the state of the skeleton corresponding to this subject, which you can get copies of by calling <code class="code docutils literal notranslate"><span class="pre">skel</span> <span class="pre">=</span> <span class="pre">your_subject.readSkel(...)</span></code>.
 With a skeleton set in the correct state, with contact and dynamics information known, you’re ready to derive any additional information you need to train your ML system!</p>
 </section>
