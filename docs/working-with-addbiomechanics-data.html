@@ -86,6 +86,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getNumTrials"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getNumTrials()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getOpensimFileText"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getOpensimFileText()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getProcessingPassType"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getProcessingPassType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getQuality"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getQuality()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getSubjectTags"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getSubjectTags()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getTrialAngularResidualNorms"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getTrialAngularResidualNorms()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getTrialLength"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getTrialLength()</span></code></a></li>
@@ -99,6 +100,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getTrialSplitIndex"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getTrialSplitIndex()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getTrialTags"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getTrialTags()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.getTrialTimestep"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.getTrialTimestep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.hasLoadedAllFrames"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.hasLoadedAllFrames()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.loadAllFrames"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.loadAllFrames()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.readForcePlates"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.readForcePlates()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk.readFrames"><code class="docutils literal notranslate"><span class="pre">SubjectOnDisk.readFrames()</span></code></a></li>
@@ -522,6 +524,12 @@ the more expensive <code class="code docutils literal notranslate"><span class="
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="nimblephysics.biomechanics.SubjectOnDisk.getQuality">
+<span class="sig-name descname"><span class="pre">getQuality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk" title="nimblephysics_libs._nimblephysics.biomechanics.SubjectOnDisk"><span class="pre">nimblephysics_libs._nimblephysics.biomechanics.SubjectOnDisk</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nimblephysics_libs._nimblephysics.biomechanics.DataQuality</span></span></span><a class="headerlink" href="#nimblephysics.biomechanics.SubjectOnDisk.getQuality" title="Permalink to this definition"></a></dt>
+<dd><p>This returns the user-supplied quality of the data in this subject</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="nimblephysics.biomechanics.SubjectOnDisk.getSubjectTags">
 <span class="sig-name descname"><span class="pre">getSubjectTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk" title="nimblephysics_libs._nimblephysics.biomechanics.SubjectOnDisk"><span class="pre">nimblephysics_libs._nimblephysics.biomechanics.SubjectOnDisk</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimblephysics.biomechanics.SubjectOnDisk.getSubjectTags" title="Permalink to this definition"></a></dt>
 <dd><p>This returns the list of tags attached to this subject, which are arbitrary strings from the AddBiomechanics platform.</p>
@@ -597,6 +605,12 @@ the more expensive <code class="code docutils literal notranslate"><span class="
 <dt class="sig sig-object py" id="nimblephysics.biomechanics.SubjectOnDisk.getTrialTimestep">
 <span class="sig-name descname"><span class="pre">getTrialTimestep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk" title="nimblephysics_libs._nimblephysics.biomechanics.SubjectOnDisk"><span class="pre">nimblephysics_libs._nimblephysics.biomechanics.SubjectOnDisk</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#nimblephysics.biomechanics.SubjectOnDisk.getTrialTimestep" title="Permalink to this definition"></a></dt>
 <dd><p>This returns the timestep size for the trial requested, in seconds per frame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimblephysics.biomechanics.SubjectOnDisk.hasLoadedAllFrames">
+<span class="sig-name descname"><span class="pre">hasLoadedAllFrames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimblephysics.biomechanics.SubjectOnDisk" title="nimblephysics_libs._nimblephysics.biomechanics.SubjectOnDisk"><span class="pre">nimblephysics_libs._nimblephysics.biomechanics.SubjectOnDisk</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimblephysics.biomechanics.SubjectOnDisk.hasLoadedAllFrames" title="Permalink to this definition"></a></dt>
+<dd><p>This returns true if all the frames have been loaded into memory.</p>
 </dd></dl>
 
 <dl class="py method">

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Answering Questions with AddBiomechanics Data &mdash; Nimble Physics 0.4.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://nimblephysics.org/answering-questions-with-addbiomechanics-data.html" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Processing Mocap Data" href="process-mocap-data.html" />
+    <link rel="prev" title="Working with AddBiomechanics Data" href="working-with-addbiomechanics-data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html">
+            <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is Nimble?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-skeletons.html">Understand Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization.html">Solving Optimization Problems with Skeletons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="markers-and-joint-centers.html">Data: Markers and Joint Centers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accs-and-gyros.html">Data: Accelerometers, Gyros and Magnetometers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inverse-dynamics.html">Computing Skeleton Joint Torques and Forces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working-with-addbiomechanics-data.html">Working with AddBiomechanics Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Answering Questions with AddBiomechanics Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-histograms-of-joint-torques">Plotting histograms of joint torques</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="process-mocap-data.html">Processing Mocap Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui-tutorial.html">Using the Nimble GUI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Nimble Physics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Answering Questions with AddBiomechanics Data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/answering-questions-with-addbiomechanics-data.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="answering-questions-with-addbiomechanics-data">
+<h1>Answering Questions with AddBiomechanics Data<a class="headerlink" href="#answering-questions-with-addbiomechanics-data" title="Permalink to this heading"></a></h1>
+<p>You can use the AddBiomechanics data to answer questions about the biomechanics of the human body.
+Here are a few worked examples, to spark your imagination.</p>
+<section id="plotting-histograms-of-joint-torques">
+<h2>Plotting histograms of joint torques<a class="headerlink" href="#plotting-histograms-of-joint-torques" title="Permalink to this heading"></a></h2>
+<p>If you are designing an exoskeleton, you might want to understand the biological torque levels at each joint.</p>
+<p>Here is a simple example to get you started:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nimblephysics</span> <span class="k">as</span> <span class="nn">nimble</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">b3d_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="c1"># Load the B3D file</span>
+    <span class="n">subjects</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">SubjectOnDisk</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">b3d_file_path</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">b3d_file_path</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.b3d&#39;</span><span class="p">):</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">b3d_file_path</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Loading </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                    <span class="n">subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">SubjectOnDisk</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">b3d_file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.b3d&#39;</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Loading </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">b3d_file_path</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">SubjectOnDisk</span><span class="p">(</span><span class="n">b3d_file_path</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reading first skeleton&#39;</span><span class="p">)</span>
+    <span class="n">skel</span> <span class="o">=</span> <span class="n">subjects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">readSkel</span><span class="p">(</span><span class="n">subjects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getNumProcessingPasses</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ignoreGeometry</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dof_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skel</span><span class="o">.</span><span class="n">getNumDofs</span><span class="p">()):</span>
+        <span class="n">dof_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skel</span><span class="o">.</span><span class="n">getDofByIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">getName</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dof_names</span><span class="p">)</span>
+    <span class="n">left_hip</span> <span class="o">=</span> <span class="n">dof_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;hip_flexion_l&#39;</span><span class="p">)</span>  <span class="c1"># positive moves leg forwards, negative moves leg backwards</span>
+
+    <span class="n">left_hip_torques</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">subject</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">subjects</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processing </span><span class="si">{</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">subjects</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">trials</span> <span class="o">=</span> <span class="n">subject</span><span class="o">.</span><span class="n">getNumTrials</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trials</span><span class="p">):</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="n">subject</span><span class="o">.</span><span class="n">getTrialLength</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
+            <span class="n">passes</span> <span class="o">=</span> <span class="n">subject</span><span class="o">.</span><span class="n">getTrialNumProcessingPasses</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
+            <span class="n">frames</span> <span class="o">=</span> <span class="n">subject</span><span class="o">.</span><span class="n">readFrames</span><span class="p">(</span><span class="n">trial</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">includeSensorData</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">includeProcessingPasses</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)):</span>
+                <span class="n">frame</span><span class="p">:</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">Frame</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">missingGRFReason</span> <span class="o">!=</span> <span class="n">nimble</span><span class="o">.</span><span class="n">biomechanics</span><span class="o">.</span><span class="n">MissingGRFReason</span><span class="o">.</span><span class="n">notMissingGRF</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">pos</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">processingPasses</span><span class="p">[</span><span class="n">passes</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span>
+                <span class="n">taus</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">processingPasses</span><span class="p">[</span><span class="n">passes</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tau</span>
+
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">taus</span><span class="p">[</span><span class="n">left_hip</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">500.0</span><span class="p">:</span>
+                    <span class="n">left_hip_torques</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">taus</span><span class="p">[</span><span class="n">left_hip</span><span class="p">])</span>
+
+
+    <span class="n">left_hip_torques</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">left_hip_torques</span><span class="p">)</span>
+
+    <span class="c1"># Plot a histogram of the torques</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">left_hip_torques</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Left Hip Torques&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Lef Hip Flexion Torques&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Create the parser</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;This loads a set of B3D files, and works out the human + exo torques &#39;</span>
+                                                <span class="s1">&#39;involved in simulating the desired virtual body. It can then compute &#39;</span>
+                                                <span class="s1">&#39;parameters for a series-elastic-actuator (SEA) to achieve the &#39;</span>
+                                                <span class="s1">&#39;desired torque. It can also simulate the SEA, and plot the results&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Add an argument</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--b3d_file_path&#39;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;../../training_data/train&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the b3d file to load, or directory of B3Ds to load&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Parse the arguments</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">main</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">b3d_file_path</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The above script will load a set of B3D files, and plot a histogram of the torques at the left hip joint.</p>
+<a class="reference internal image-reference" href="_images/Hip_flexion_tau.png"><img alt="_images/Hip_flexion_tau.png" src="_images/Hip_flexion_tau.png" style="width: 500px;" /></a>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="working-with-addbiomechanics-data.html" class="btn btn-neutral float-left" title="Working with AddBiomechanics Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="process-mocap-data.html" class="btn btn-neutral float-right" title="Processing Mocap Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Keenon Werling.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
